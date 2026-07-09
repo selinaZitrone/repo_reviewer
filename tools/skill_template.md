@@ -15,6 +15,12 @@ improve so a competent stranger could understand, trust, and reuse the work.
   one of the defined **checks** below. For every finding, cite **concrete file-path
   evidence** (a path, a line, or a specifically-named missing artifact). **No evidence
   → no finding.**
+- **Evidence lists are examples, not definitions.** A check's `summary` states what must
+  be true; its `evidence` is how that is *usually* satisfied. If the repo satisfies the
+  summary with something not on the list — a `pyproject.toml` for "a dependency record
+  exists", an unusual credential format for "no secrets are committed" — judge against
+  the **summary** and **name what you found**. Recognising an unlisted *instance* of a
+  defined check is your job; raising a finding that maps to **no check** is not.
 - **You read the repository; you never run it.** No installing dependencies, no
   executing scripts, no re-running the analysis. You check *reviewability and
   completeness*, not that the code runs or reproduces. Say so in the report.
@@ -38,9 +44,11 @@ Decide one state per check:
   precondition is absent — see the contingency rule). One-line reason. Not counted as
   a pass or a fail.
 
-By `mode`: **deterministic** — decide from the listed evidence artifacts;
-**ai** — judgment over content; **none** — do not evaluate, list under *Before you
-publish*.
+By `mode`: **deterministic** — decide from the listed evidence artifacts, but if none is
+found **do not fail automatically**: first check whether an *unlisted* artifact satisfies
+the summary. **ai** — judgment over content. **none** — do not evaluate, list under
+*Before you publish*. When the long-tail case is genuinely unclear, ⚠️ is the honest
+answer — better than guessing either way.
 
 **Polarity (`pass_when`).** Default is `pass_when: present` — the check passes when a
 satisfying piece of evidence is **found**. A check marked **`pass_when: absent`**

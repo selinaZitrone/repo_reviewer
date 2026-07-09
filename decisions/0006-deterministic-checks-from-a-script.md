@@ -23,6 +23,12 @@ the demo reliable.
 only — it does **not** run the repository's code, install dependencies, or execute
 the analysis. It reads and pattern-matches; nothing more.
 
+**Refinement (see `decisions/0008`):** a script **miss is not a failure**. The script is
+a *fast path* — a hit passes the check immediately and cheaply. A miss **escalates to AI
+judgment**, which decides whether an unlisted artifact satisfies the check's summary
+(e.g. a `pyproject.toml` where the list only named `requirements.txt`). The model still
+may not assert a deterministic fact the script contradicts.
+
 **Revisit if:** other delivery contexts are added (the script becomes a small
 standalone CLI reused across them), or the check set grows enough to warrant the
 declarative runner originally imagined for Phase 5.

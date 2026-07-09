@@ -19,8 +19,10 @@ checks:
         - "committed sessionInfo() / sessioninfo::session_info() output"
       python:
         - requirements.txt
+        - "pyproject.toml with dependencies"
         - environment.yml
         - "poetry.lock / pdm.lock / uv.lock"
+        - "setup.py with install_requires"
       matlab:
         - "list of required toolboxes + MATLAB version (README or ver output)"
       any:
@@ -36,7 +38,8 @@ checks:
         - "DESCRIPTION with versioned Imports/Depends"
       python:
         - "requirements.txt using == (not >= or unpinned)"
-        - "poetry.lock / uv.lock"
+        - "poetry.lock / pdm.lock / uv.lock"
+        - "pyproject.toml with pinned versions"
   - id: env-language-version
     mode: ai
     severity: should-fix
@@ -46,6 +49,7 @@ checks:
         - "R version recorded in renv.lock"
       python:
         - ".python-version"
+        - "requires-python in pyproject.toml"
         - "Python version stated in README"
 ---
 
@@ -68,8 +72,8 @@ pinned one (`pandas==2.1.4`) records what actually ran.
 
 - **R** — `renv::init()` then `renv::snapshot()`, and commit `renv.lock`.
   A `DESCRIPTION` with versioned `Imports` is an acceptable lighter alternative.
-- **Python** — `pip freeze > requirements.txt`, or commit your `environment.yml`
-  or a lockfile (`poetry.lock`, `uv.lock`, …).
+- **Python** — `pip freeze > requirements.txt`, or commit your `environment.yml`,
+  your `pyproject.toml` dependencies, or a lockfile (`poetry.lock`, `uv.lock`, …).
 - **MATLAB** — list the required toolboxes and the MATLAB version in the README.
 - **Either** — a `Dockerfile` supersedes the above and is stronger, but is not
   required.

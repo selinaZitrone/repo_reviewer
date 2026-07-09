@@ -80,7 +80,9 @@ checks:                           # required. one or more.
   `decisions/0005`.
 - `summary` — the one-line label the check shows as a `✅`/`❌`/`⚠️` line. Phrase it
   as the *good* state ("A licence file exists") so `✅` reads naturally — and, for
-  `pass_when: absent` checks, so it names the target to fix toward.
+  `pass_when: absent` checks, so it names the target to fix toward. **The reviewer
+  judges against the `summary`, not against the evidence list**, so write it as the
+  real *invariant* (the thing that must be true), never as a filename.
 - `pass_when` — **optional, default `present`.** `present` = the check passes when a
   satisfying piece of `evidence` is **found** (add-a-thing checks, the majority).
   `absent` = the check passes when the evidence is **not** found (remove-a-thing
@@ -92,10 +94,18 @@ checks:                           # required. one or more.
 - `evidence` — machine-facing, terse. Keys: `r`, `python`, `any`, and other
   languages as needed (`matlab` only where it genuinely differs). Each entry is a
   concrete artifact or pattern the script/agent looks for. **Required for
-  `deterministic` checks** (they decide purely from named artifacts). **Optional
-  for `ai` checks** — a judgment like "is the licence OSI-approved?" reads content
-  and cites its evidence (a path/line) at review time, so it often has none to
+  `deterministic` checks** (a script needs concrete artifacts/patterns to look for).
+  **Optional for `ai` checks** — a judgment like "is the licence OSI-approved?" reads
+  content and cites its evidence (a path/line) at review time, so it often has none to
   pre-list. **Omit for `none`.**
+  - **`evidence` is illustrative, not exhaustive.** It lists how a check is *usually*
+    satisfied; the `summary` is the definition. A repo that satisfies the summary with
+    something we never listed (e.g. `pyproject.toml` for "a dependency record exists")
+    **passes** — the reviewer names what it found. So a deterministic *miss* escalates
+    to judgment; it never auto-fails. Conversely, the reviewer may never raise a finding
+    that maps to no check. → `decisions/0008`
+  - When validation turns up a satisfier people actually use, **add it here.** The long
+    tail shrinks over time.
   - **Order `evidence` best-first.** The list does double duty: it decides pass/fail
     *and* it is the source of the report's fix ("add/adopt the first entry that fits
     this repo"). Putting the recommended artifact first (e.g. `renv.lock` before

@@ -178,6 +178,13 @@ The output of *this* planning session.
   catches on").
 - Check findings are true, evidence-backed, and correctly severity-ranked; confirm
   a genuinely good repo comes back clean (all `✓`).
+- **Harvest the long tail** (`decisions/0008`). Validation is where you learn what real
+  repos actually do:
+  - When a repo satisfies a check with an artifact we never listed (`pyproject.toml`,
+    `setup.py`, …), **add it to that check's `evidence`**.
+  - Run a **team-only "criteria discovery" pass** where the model *is* allowed to name
+    problems no criterion covers. Promote each worthwhile candidate into a real
+    criterion (source + rationale + fix). The shipped report never does this.
 - **Iterate the criteria** here. Expect the criteria to change.
 
 ### Phase 5 — Website (Quarto) + release tooling (after validation, post-lecture)
