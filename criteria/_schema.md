@@ -49,7 +49,7 @@ checks:                           # required. one or more.
     mode: deterministic           # required. deterministic | ai | none
     severity: must-fix            # required. must-fix | should-fix | polish
     summary: A dependency/environment record exists   # required. one line, human.
-    evidence:                     # required unless mode: none.
+    evidence:                     # required for deterministic; optional for ai; omit for none.
       r:      [renv.lock, "DESCRIPTION with Imports/Depends"]
       python: [requirements.txt, environment.yml]
       any:    [Dockerfile]
@@ -81,7 +81,11 @@ checks:                           # required. one or more.
   as the *good* state ("A licence file exists") so `✓` reads naturally.
 - `evidence` — machine-facing, terse. Keys: `r`, `python`, `any`, and other
   languages as needed (`matlab` only where it genuinely differs). Each entry is a
-  concrete artifact or pattern the script/agent looks for. Omit for `mode: none`.
+  concrete artifact or pattern the script/agent looks for. **Required for
+  `deterministic` checks** (they decide purely from named artifacts). **Optional
+  for `ai` checks** — a judgment like "is the licence OSI-approved?" reads content
+  and cites its evidence (a path/line) at review time, so it often has none to
+  pre-list. **Omit for `none`.**
 - Deliberately **excluded** (keep it lean): no `report_hint` (the report template
   handles phrasing globally), no `applies_to`/profiles (a v2 concern — conditional
   cases like "data licence only when data is present" go in the check's `summary`

@@ -27,7 +27,7 @@ checks:
         - Dockerfile
         - "apptainer.def / Singularity"
   - id: env-versions-pinned
-    mode: deterministic
+    mode: ai
     severity: should-fix
     summary: Dependencies are pinned to exact versions, not just named
     evidence:
