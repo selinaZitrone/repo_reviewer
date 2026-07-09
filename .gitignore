@@ -29,3 +29,5 @@ id_rsa*
 .DS_Store
 Thumbs.db
 .idea/
+
+good_bad_repos/
