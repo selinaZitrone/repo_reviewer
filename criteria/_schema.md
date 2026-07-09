@@ -32,8 +32,10 @@ criteria/<group>/<id>.md
 - `<id>` is short, kebab-case, unique across all groups, and stable (it appears in
   reports and URLs — treat it as an API). e.g. `environment-captured`.
 - Each **check** also has an `id`, unique *within its criterion* and likewise
-  stable — it is the finding id in the report and in any later JSON. e.g.
-  `env-file-present`.
+  stable — it is the finding id in any later JSON, and how a check is referred to in
+  discussion. It is **not** rendered in `REVIEW.md`: the report shows a check's
+  `summary`, not its id (ids read as clutter to the scientist who is the reader).
+  e.g. `env-file-present`.
 
 ## Frontmatter fields
 
@@ -41,9 +43,6 @@ criteria/<group>/<id>.md
 id: environment-captured          # required. kebab-case, unique, stable.
 title: The computational environment is recorded   # required. human sentence.
 group: environment                # required. one of the seven groups.
-sources:                          # required. ids from _sources.md. >=1.
-  - fair4rs
-  - turing-way-compendia
 checks:                           # required. one or more.
   - id: env-file-present          # required. kebab-case, unique within criterion.
     mode: deterministic           # required. deterministic | ai | none
