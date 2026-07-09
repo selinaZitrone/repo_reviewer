@@ -14,7 +14,7 @@ Summary of architecture and choices so far \+ open questions to discuss
 
 **Selling point:** Yes this is AI, but the backbone are our researched and categorized checklist items. The AI will only rely on those items and will be kept on a short leash. This means that the tool will be somewhat transparent and reliable although it’s AI.
 
-**Requirements to run the tool:** AI-integrated IDE (for now Claude Code, but also Github Copilot works) \+ the repo to review
+**Requirements to run the tool:** AI-integrated IDE (for now Claude Code; the same criteria can be re-rendered for Copilot or a copyable prompt later) \+ the repo to review
 
 ## The criteria for review
 
@@ -22,10 +22,11 @@ The criteria are the checklist items that the repo-reviewer checks against. They
 
 The idea for now (details below):
 
-- Criteria are divided into groups by topic  
-- Criteria are categorized by severity  
-- Criteria have different modes: deterministic/ai/none  
-- One markdown file per criteria structured clearly with YAML header for the AI and prose text for the website later
+- Criteria are divided into groups by topic
+- Each criterion contains one or more checks (the actual checklist items)  
+- Checks are categorized by severity  
+- Checks have different modes: deterministic/ai/none  
+- One markdown file per criterion, with YAML header for the AI and prose text for the website later
 
 ###  Topic groups
 
@@ -41,17 +42,26 @@ See also: criteria/\_groups.md
 
 ### Severity scale
 
-Criteria are marked by severity:
+Each check has a severity:
 
 - must-fix: without it, a stranger cannot reuse the repo  
 - Should-fix: reuse is possible but harder than necessary  
 - Polish: everything else
 
-### Criteria modes
+### Check modes
 
-- Deterministic: Criteria can be checked without AI (e.g. README/LICENCE present yes/no)  
-- AI: Criteria is evaluated with AI judgement (e.g. is the README clear, are the file names good, …)  
-- None: Criteria that cannot be checked by AI (e.g. is it on Zenodo and has a DOI)
+- Deterministic: check runs without AI (e.g. README/LICENCE present yes/no)  
+- AI: check evaluated with AI judgement (e.g. is the README clear, are the file names good, …)  
+- None: check that cannot be verified from the repo (e.g. is it on Zenodo and has a DOI)
+
+### Checks
+
+Each criterion contains one or more checks. A check is one line in the report. Severity, mode and pass_when live on the check, not the whole criterion - so one criterion can mix a deterministic "is it present?" check with an AI "is it good?" check.
+
+- Example: licence criterion = licence present (deterministic, must-fix) + licence OSI-approved (AI, should-fix) + data licence present (AI, should-fix)
+- Each check has an evidence list: files/patterns that satisfy it, ordered best-first. Drives the pass/fail decision AND the suggested fix ("add the first evidence entry that fits this repo")
+- pass_when (default present): most checks pass when evidence is found. Use pass_when: absent for "remove-a-thing" checks (secrets, absolute paths) - they pass when the pattern is NOT found
+- If a presence check fails (no licence at all), its quality checks are marked not-applicable - so the same gap is not reported twice
 
 ### How to document the criteria
 
@@ -71,6 +81,7 @@ See also:
   - File & pattern checks run deterministically from a small script (e.g. to check if README exists) \-\> This avoids AI hallucinations  
 - Avoid hallucinations: AI skill should just audit the repo based on our criteria. It should only raise a point if that point is part of our defined check list, every finding must cite concrete file-path evidence. If there is no evidence, there is no finding.  
 - Uncertainty should be visible: If a check cannot be decided, it should be marked
+- A good repo can come back clean (all ✅): we don't invent problems to fill space
 
 ### The workflow
 
@@ -110,7 +121,7 @@ Basic idea:
   - The criteria but written with more prose for people to read details (can be compiled from the criteria markdown files \- not the YAML part but the body)  
   - Links to additional resources and other tools  
 - Validation and testing  
-  - Use the good/bad repos listed above \-\> Many of them are not data-analysis but software/packages  
+  - Use the good/bad repos we collected (see PLAN.md) \-\> Many of them are not data-analysis but software/packages  
   - Can we get a good list of repositories from different fields, languages and quality? They could also be used to tell AI to further refine the criteria or adjust the report where needed  
   - How to validate?  
     - Run on same repo multiple times and check if the report is consistent?  
@@ -121,7 +132,8 @@ Basic idea:
 ### First
 
 - Decide on the architecture  
-- Tightly define criteria using a structured schema  
+- Tightly define criteria using a structured schema
+- Build the deterministic check script (produces the JSON for deterministic checks)  
 - Validate and test thoroughly
 
 ### Next
