@@ -1,0 +1,31 @@
+# --- repo-reviewer ---
+
+# Compiled skill (regenerate with: python tools/compile_skill.py)
+build/
+
+# Tool output (the review writes REVIEW.md into the repo it reviews)
+REVIEW.md
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# R
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+
+# Secrets / credentials — never commit these
+.env
+.Renviron
+*.pem
+id_rsa*
+.httr-oauth
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+.idea/
