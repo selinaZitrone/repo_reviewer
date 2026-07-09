@@ -82,7 +82,16 @@ def render_check(check: dict, criterion_path: Path) -> str:
     for field in ("id", "mode", "severity", "summary"):
         if field not in check:
             raise ValueError(f"{criterion_path}: a check is missing '{field}'.")
-    head = f"- [{check['id']}] ({check['mode']}, {check['severity']}) {check['summary']}"
+    pass_when = check.get("pass_when", "present")
+    if pass_when not in ("present", "absent"):
+        raise ValueError(
+            f"{criterion_path}: check '{check['id']}' has pass_when '{pass_when}' "
+            f"(must be 'present' or 'absent')."
+        )
+    tag = f"{check['mode']}, {check['severity']}"
+    if pass_when == "absent":
+        tag += ", pass_when=absent"
+    head = f"- [{check['id']}] ({tag}) {check['summary']}"
     ev = render_evidence(check.get("evidence"))
     if ev:
         return head + f"\n    evidence — {ev}"

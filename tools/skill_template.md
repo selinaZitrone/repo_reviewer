@@ -42,6 +42,12 @@ By `mode`: **deterministic** — decide from the listed evidence artifacts;
 **ai** — judgment over content; **none** — do not evaluate, list under *Before you
 publish*.
 
+**Polarity (`pass_when`).** Default is `pass_when: present` — the check passes when a
+satisfying piece of evidence is **found**. A check marked **`pass_when: absent`**
+(committed secrets, absolute paths, committed junk) is the reverse: it **passes when the
+evidence is NOT found**. If you *find* the listed pattern, that is a ❌ — cite the
+offending path/line, and the fix is to remove/replace it to meet the summary.
+
 **Deriving the fix (❌ only).** Take the fix from the check's `evidence`: recommend
 adding/adopting the **first** entry that fits this repo's language, phrased as an
 action (e.g. an R repo failing "environment recorded" → "run `renv::snapshot()` and
@@ -64,9 +70,10 @@ your use only. Group headings below are the human-readable report section names.
 
 ## Write `REVIEW.md` at the repository root
 
-Use exactly this structure. Show **every** check as one line; order failures within a
-section by severity (must-fix → should-fix → polish). Tag `❌`/`⚠️` with their severity
-in plain text; do not tag `✅`/`➖`.
+Use exactly this structure. Show **every** check as one line, with a **blank line
+between every item** so each renders on its own line. Order failures within a section by
+severity (must-fix → should-fix → polish). Tag `❌`/`⚠️` with their severity in plain
+text; do not tag `✅`/`➖`.
 
 ```
 > ⚠️ Delete this file before publishing / archiving the repository — it lists the
@@ -87,12 +94,18 @@ _Legend: ✅ pass · ❌ needs fixing · ⚠️ couldn't verify · ➖ not appli
 one-line fix. If there are none, write: "No must-fix items open — nice.">
 
 ## Checklist
+
 ### <Human section name>
+
 ✅ <check summary>
+
 ❌ <check summary> (must-fix) — <one-line fix>
+
 ⚠️ <check summary> (should-fix) — couldn't verify: <what was ambiguous>
+
 ➖ <check summary> — not applicable: <one-line reason>
-<...one line per check, every check shown, grouped by section, failures ordered by severity...>
+
+<...one line per check, a blank line between items, every check shown, grouped by section, failures ordered by severity...>
 
 ## Before you publish (we can't check these)
 <The `mode: none` checks as a plain to-do list, e.g.>

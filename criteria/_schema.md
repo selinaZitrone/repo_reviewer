@@ -49,6 +49,7 @@ checks:                           # required. one or more.
     mode: deterministic           # required. deterministic | ai | none
     severity: must-fix            # required. must-fix | should-fix | polish
     summary: A dependency/environment record exists   # required. one line, human.
+    # pass_when: present          # optional. present (default) | absent. See field notes.
     evidence:                     # required for deterministic; optional for ai; omit for none.
       r:      [renv.lock, "DESCRIPTION with Imports/Depends"]
       python: [requirements.txt, environment.yml]
@@ -77,8 +78,17 @@ checks:                           # required. one or more.
   All three render in the checklist; the report's priority **digest** leads with
   the open `must-fix` failures. There is no progressive hiding — see
   `decisions/0005`.
-- `summary` — the one-line label the check shows as a `✓`/`✗`/`?` line. Phrase it
-  as the *good* state ("A licence file exists") so `✓` reads naturally.
+- `summary` — the one-line label the check shows as a `✅`/`❌`/`⚠️` line. Phrase it
+  as the *good* state ("A licence file exists") so `✅` reads naturally — and, for
+  `pass_when: absent` checks, so it names the target to fix toward.
+- `pass_when` — **optional, default `present`.** `present` = the check passes when a
+  satisfying piece of `evidence` is **found** (add-a-thing checks, the majority).
+  `absent` = the check passes when the evidence is **not** found (remove-a-thing
+  checks: committed secrets, absolute paths, committed junk). For `absent` checks the
+  `evidence` list is the *violation patterns to search for*, and the fix is
+  "remove/replace the flagged item" (the good state is the `summary`). Rule of thumb:
+  if a check would make you say "good, I didn't find any…", it is `pass_when: absent`.
+  Worked example: `criteria/repository-hygiene/no-committed-secrets.md`. → `decisions/0007`.
 - `evidence` — machine-facing, terse. Keys: `r`, `python`, `any`, and other
   languages as needed (`matlab` only where it genuinely differs). Each entry is a
   concrete artifact or pattern the script/agent looks for. **Required for
