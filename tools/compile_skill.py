@@ -19,7 +19,8 @@ from pathlib import Path
 
 import yaml
 
-# Canonical report-section order (from criteria/_groups.md). Unknown groups append.
+# Canonical report-section order + human-readable heading (mirrors criteria/_groups.md).
+# Unknown groups append, titled by their raw id.
 GROUP_ORDER = [
     "orientation",
     "licensing-citation",
@@ -29,6 +30,15 @@ GROUP_ORDER = [
     "repository-hygiene",
     "archiving-release",
 ]
+GROUP_TITLES = {
+    "orientation": "Orientation & README",
+    "licensing-citation": "Licensing & citation",
+    "data": "Data",
+    "code-analysis": "Code",
+    "environment": "Environment & dependencies",
+    "repository-hygiene": "Repository hygiene",
+    "archiving-release": "Archiving & release",
+}
 
 
 def parse_frontmatter(text: str, path: Path) -> dict:
@@ -97,7 +107,7 @@ def render_criteria(criteria: list[dict]) -> str:
 
     blocks = []
     for group in ordered:
-        lines = [f"### {group}"]
+        lines = [f"### {GROUP_TITLES.get(group, group)}"]
         for c in by_group[group]:
             lines.append(f"\n**{c['title']}** (`{c['id']}`)")
             for check in c["checks"]:

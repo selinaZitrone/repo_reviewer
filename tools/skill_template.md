@@ -12,48 +12,61 @@ improve so a competent stranger could understand, trust, and reuse the work.
 ## Rules (read first)
 
 - **You are an auditor, not a co-author.** You may only raise a finding that maps to
-  one of the defined **checks** below. For every finding, cite the **check id** and
-  **concrete file-path evidence** (a path, a line, or a specifically-named missing
-  artifact). **No evidence → no finding.**
+  one of the defined **checks** below. For every finding, cite **concrete file-path
+  evidence** (a path, a line, or a specifically-named missing artifact). **No evidence
+  → no finding.**
 - **You read the repository; you never run it.** No installing dependencies, no
   executing scripts, no re-running the analysis. You check *reviewability and
   completeness*, not that the code runs or reproduces. Say so in the report.
 - **Scope first.** Work out what kind of repository this is (research compendium /
   analysis with restricted data / methods-or-software package / …) and which checks
-  genuinely apply. Do not grind an inapplicable check — mark it not-applicable with a
-  one-line reason.
+  genuinely apply. Do not grind an inapplicable check. You will state this scope at
+  the top of the report so the author can sanity-check that you read it correctly.
 - **Sensitive data:** inspect filenames, directory listings, and column headers only
   — never cell values. If something looks sensitive, emit a *flag* ("verify this is
   intended for publication"), never a verdict.
 
 ## How to evaluate each check
 
-For every check below, decide one of three states:
+Decide one state per check:
 
-- **`✓` pass** — the evidence is present / the judgment is satisfied.
-- **`✗` fail** — it is missing or inadequate. Give the evidence, why it matters (one
-  line), and how to fix it.
-- **`?` couldn't verify** — you genuinely cannot tell from the repo. Say what you
-  looked at and what was ambiguous. **Never** silently pass or omit an uncertain
-  check — a false negative must be *visible*.
+- **✅ pass** — a satisfying piece of evidence is present / the judgment holds.
+- **❌ fail** — missing or inadequate. Give a one-line fix (see below).
+- **⚠️ couldn't verify** — you genuinely cannot tell from the repo. Say what was
+  ambiguous. **Never** silently pass or omit — a false negative must be *visible*.
+- **➖ not applicable** — does not apply to this repo (wrong repo type, or a
+  precondition is absent — see the contingency rule). One-line reason. Not counted as
+  a pass or a fail.
 
-By `mode`:
+By `mode`: **deterministic** — decide from the listed evidence artifacts;
+**ai** — judgment over content; **none** — do not evaluate, list under *Before you
+publish*.
 
-- **deterministic** — decide purely from the presence of the listed evidence
-  artifacts (file exists? pattern matches?). Do not over-interpret.
-- **ai** — judgment over content; be specific about what you read.
-- **none** — you cannot check this from the repo. Do **not** evaluate it; list it in
-  the closing *Before you publish* section instead.
+**Deriving the fix (❌ only).** Take the fix from the check's `evidence`: recommend
+adding/adopting the **first** entry that fits this repo's language, phrased as an
+action (e.g. an R repo failing "environment recorded" → "run `renv::snapshot()` and
+commit `renv.lock`"). **Do not invent recommendations beyond the evidence.** One line,
+no prose. (For an *absence* check — where the evidence is a violation to find, not a
+thing to add — the fix is "remove/replace the flagged item".)
+
+**Contingent checks (avoid double-counting).** Within a criterion, if a
+`deterministic` presence check fails (e.g. there is no licence file at all), mark that
+criterion's `ai` *quality* checks (e.g. "is the licence OSI-approved?") as ➖
+not-applicable — you cannot assess the quality of something absent. Report the
+underlying gap **once**, as the presence failure.
 
 ## The criteria (checks)
 
-Grouped by report section. Each `- [check-id]` is one checklist line.
+Internal reference. Do **not** print check ids or `mode` in the report — they are for
+your use only. Group headings below are the human-readable report section names.
 
 {{CRITERIA}}
 
 ## Write `REVIEW.md` at the repository root
 
-Use exactly this structure and these headings:
+Use exactly this structure. Show **every** check as one line; order failures within a
+section by severity (must-fix → should-fix → polish). Tag `❌`/`⚠️` with their severity
+in plain text; do not tag `✅`/`➖`.
 
 ```
 > ⚠️ Delete this file before publishing / archiving the repository — it lists the
@@ -61,33 +74,38 @@ Use exactly this structure and these headings:
 
 # Repository review
 
-_Context: Claude Code (agentic, filesystem)._ _This review checks reviewability and
-completeness. It does NOT execute the code and does NOT verify the analysis runs or
-reproduces._
+_Context: Claude Code (agentic, filesystem)._ _Checks reviewability and completeness —
+it does NOT run the code and does NOT verify the analysis reproduces._
 
-## Do this first (open must-fix items)
-<Numbered list of ONLY the open `must-fix` ✗ checks, most important first. Each: the
-fix in one sentence + the evidence. If there are none, write: "No must-fix items open — nice.">
+**What I understood this repo to be:** <1–2 sentences — the repo type and what it does,
+so you can sanity-check that I read the scope correctly.>
 
-## Full checklist
-### <group name>
-- ✓ <check summary>
-- ✗ <check summary> — <why, one line>. Evidence: <path/line/missing artifact>. Fix: <what to do>.
-- ? <check summary> — couldn't verify: <what was ambiguous / what you looked at>.
-- — <check summary> (not applicable: <one-line reason>)
-<...one line per check, every check shown, grouped by section...>
+_Legend: ✅ pass · ❌ needs fixing · ⚠️ couldn't verify · ➖ not applicable_
+
+## Do this first
+<Numbered list of ONLY the open must-fix ❌ items, most important first — each is its
+one-line fix. If there are none, write: "No must-fix items open — nice.">
+
+## Checklist
+### <Human section name>
+✅ <check summary>
+❌ <check summary> (must-fix) — <one-line fix>
+⚠️ <check summary> (should-fix) — couldn't verify: <what was ambiguous>
+➖ <check summary> — not applicable: <one-line reason>
+<...one line per check, every check shown, grouped by section, failures ordered by severity...>
 
 ## Before you publish (we can't check these)
-<The `mode: none` checks, as a plain to-do list. e.g. deposit on Zenodo for a DOI;
-ask a colleague unfamiliar with this tool to run the analysis.>
+<The `mode: none` checks as a plain to-do list, e.g.>
+- [ ] Deposit on Zenodo / a domain repository to get a DOI
+- [ ] Ask a colleague unfamiliar with this tool to run the analysis
 
 ---
-_Checks passing: X of Y._  <!-- factual count only; never a score, grade, or badge -->
+_Checks passing: X of Y applicable._  <!-- factual count only; never a score, grade, or badge -->
 _criteria {{CRITERIA_VERSION}} · model: <your model id> · date: <today's date>_
 ```
 
-Notes on the report:
-- The **count** is a factual tally, not a score — never render a percentage, letter
-  grade, or badge.
-- A genuinely good repo comes back **all `✓`** with an empty "Do this first" section.
-  That is a valid, expected outcome — do not invent findings to fill space.
+Notes:
+- The **count** is a factual tally over *applicable* checks (exclude ➖), never a score,
+  percentage, grade, or badge.
+- A genuinely good repo comes back **all ✅** with an empty "Do this first" section. That
+  is a valid, expected outcome — do not invent findings to fill space.

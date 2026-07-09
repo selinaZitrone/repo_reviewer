@@ -86,6 +86,13 @@ checks:                           # required. one or more.
   for `ai` checks** — a judgment like "is the licence OSI-approved?" reads content
   and cites its evidence (a path/line) at review time, so it often has none to
   pre-list. **Omit for `none`.**
+  - **Order `evidence` best-first.** The list does double duty: it decides pass/fail
+    *and* it is the source of the report's fix ("add/adopt the first entry that fits
+    this repo"). Putting the recommended artifact first (e.g. `renv.lock` before
+    `DESCRIPTION`) is how you get consistent, opinionated fixes across reports
+    **without** a separate `fix` field. There is no `fix` field — the fix is derived
+    from ordered evidence; detailed how-to prose lives in the body's *How to satisfy
+    it* (rendered on the website), not in the report.
 - Deliberately **excluded** (keep it lean): no `report_hint` (the report template
   handles phrasing globally), no `applies_to`/profiles (a v2 concern — conditional
   cases like "data licence only when data is present" go in the check's `summary`
