@@ -32,3 +32,26 @@ may not assert a deterministic fact the script contradicts.
 **Revisit if:** other delivery contexts are added (the script becomes a small
 standalone CLI reused across them), or the check set grows enough to warrant the
 declarative runner originally imagined for Phase 5.
+
+## Open question — precision of a deterministic HIT (raised 2026-07-22)
+
+Authoring `code-quality/paths-are-relative` (`no-absolute-paths`, now
+`mode: deterministic`, severity **must-fix**) surfaced a gap. A regex has high recall
+but imperfect precision: an absolute-path pattern also matches URLs, paths inside
+comments, and placeholders like `"path/to/your/data"` — none of which are real
+violations. For a **must-fix**, a false-positive hit is the worst case.
+
+So: **does a deterministic hit get AI-confirmed before it is reported, or is the
+script's verdict final?**
+
+- The `decisions/0008` refinement only covers a script **miss** (→ escalate to AI). It
+  does not say what happens to a **hit** on an `absent`/violation check — whether the
+  AI filters it, or it is reported as-is.
+- Two ways to close it: (a) the Phase 3 script pre-filters obvious non-violations
+  (strip `http(s)://`, `s3://`; skip comment lines) and the AI report step reviews the
+  rest; or (b) `mode` gains an explicit "deterministic-recall + AI-precision" shape for
+  checks like this.
+
+**To resolve at Phase 3 (deterministic-script build) and/or with the schema owner.**
+Affects every `pass_when: absent` deterministic check whose pattern can match benign
+text — absolute paths, and likely the committed-secrets regexes too.

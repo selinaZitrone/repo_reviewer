@@ -1,7 +1,7 @@
 ---
 id: readme-informative
 title: The README orients a newcomer
-group: orientation
+group: structure
 sources:
   - nature-code-guidelines
   - ropensci-devguide

@@ -31,3 +31,7 @@ Thumbs.db
 .idea/
 
 good_bad_repos/
+
+# Personal criterion drafts (author-template pages, collected for Google Docs —
+# not the real schema files in criteria/, never pushed)
+author-drafts/

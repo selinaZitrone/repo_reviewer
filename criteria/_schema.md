@@ -28,7 +28,7 @@ Rule of thumb for splitting into criteria vs checks:
 criteria/<group>/<id>.md
 ```
 
-- `<group>` is one of the seven groups in `_groups.md`.
+- `<group>` is one of the eight groups in `_groups.md`.
 - `<id>` is short, kebab-case, unique across all groups, and stable (it appears in
   reports and URLs — treat it as an API). e.g. `environment-captured`.
 - Each **check** also has an `id`, unique *within its criterion* and likewise
@@ -42,7 +42,7 @@ criteria/<group>/<id>.md
 ```yaml
 id: environment-captured          # required. kebab-case, unique, stable.
 title: The computational environment is recorded   # required. human sentence.
-group: environment                # required. one of the seven groups.
+group: environment                # required. one of the eight groups.
 checks:                           # required. one or more.
   - id: env-file-present          # required. kebab-case, unique within criterion.
     mode: deterministic           # required. deterministic | ai | none

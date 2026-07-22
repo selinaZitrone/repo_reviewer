@@ -1,12 +1,12 @@
 # Criterion groups
 
-Seven groups. Each is simultaneously a **report section**, a **website nav
+Eight groups. Each is simultaneously a **report section**, a **website nav
 entry**, and a **unit of authoring work** (one owner per group → no merge
 conflicts, no overlap arguments).
 
 Groups are named for **artifacts**, not virtues. (The old "Professionality"
 group is dissolved — a group named for a virtue attracts junk criteria. Typos and
-markdown usage fold into README quality under `orientation`.)
+markdown usage fold into README quality under `structure`.)
 
 ## Tie-breaker rule: what is the reader *doing* when they notice it?
 
@@ -14,26 +14,31 @@ When a criterion could plausibly sit in two groups, place it by the **reader
 activity that surfaces it** — because a group is a report section, and the
 question is really "under which heading would a reader expect this finding?"
 
-- noticed by **looking at the file tree** (no file opened) → `orientation`
-- noticed by **reading the code** → `code-analysis`
+- noticed by **looking at the file tree** (no file opened) → `structure`
+- noticed by **reading the code for style/clarity** → `code-quality`
+- noticed by **asking "would this re-run and give the same result?"** →
+  `reproducibility`
 - noticed by **looking at data files** → `data`
 
-Worked example — "structure" is two different criteria, and the rule splits them:
+Worked example — "structure" is two different concerns, and the rule splits them:
 
 - **File & folder structure** (conventional layout, navigable folders, filenames
-  that reveal what's where) — seen from the tree → **`orientation`**.
+  that reveal what's where) — seen from the tree → **`structure`**.
 - **Code structure** (modularity, functions vs. copy-paste, organisation within
-  and between scripts) — seen by reading code → **`code-analysis`**.
+  and between scripts) — seen by reading code → **`code-quality`**.
+
+## The eight groups
 
 | # | Group (`group:` value) | Covers | Reconciles from old notes |
 |---|---|---|---|
-| 1 | `orientation` | README exists + is informative; states what/why/how; entry point; how to run; contact; **file & folder structure** (conventional layout, navigable); **file/folder names reveal content & flow**; typos & markdown quality | README, Professionality, Naming/Structure (file level) |
+| 1 | `structure` | README exists + is informative; states what/why/how; entry point; how to run; contact; **file & folder structure** (conventional layout, navigable); **file/folder names reveal content & flow**; typos & markdown quality | README, Professionality, Naming/Structure (file level); formerly `orientation` |
 | 2 | `licensing-citation` | code LICENSE (present + suitable); data licence; CITATION.cff / how to cite | Licence |
 | 3 | `data` | availability statement; codebook/data dictionary; formats; **raw vs. derived separation**; **sensitive-data flag** | Example Data, (parts of Reproducibility) |
-| 4 | `code-analysis` | **code structure** (modularity, functions vs. copy-paste, organisation within & between scripts); meaningful **variable/function** names; no absolute paths / `setwd()`; seeds set; comments explain *why*; run order documented/discoverable | Code Quality, Naming/Structure (code level), Reproducibility (non-execution parts) |
+| 4 | `code-quality` | **code structure** (modularity, functions vs. copy-paste, organisation within & between scripts); meaningful **variable/function** names; comments explain *why* | Code Quality, Naming/Structure (code level); formerly `code-analysis`, minus the run-it-again items now in `reproducibility` |
 | 5 | `environment` | dependencies recorded with **versions**; container; language version; OS notes | Environment/System/Installation |
 | 6 | `repository-hygiene` | `.gitignore`; no committed junk/outputs; **no committed secrets**; sensible size | (new — thin in old notes) |
-| 7 | `archiving-release` | deposit on Zenodo/domain repo; DOI; tagged/versioned release; "ask a colleague to run it" | (new) — mostly `mode: none` checks |
+| 7 | `archive-release` | deposit on Zenodo/domain repo; DOI; tagged/versioned release; "ask a colleague to run it" | (new) — mostly `mode: none` checks; formerly `archiving-release` |
+| 8 | `reproducibility` | no absolute paths / `setwd()` (runs from a fresh clone); **seeds set** (reproducible randomness); **run order** documented/discoverable; deterministic outputs | (new) — the run-it-again items pulled out of old `code-analysis` |
 
 ## Notes for authors
 
@@ -47,6 +52,17 @@ Worked example — "structure" is two different criteria, and the rule splits th
 - **Group 3 sensitive-data flag:** inspect filenames, directory listings, and
   column headers only — never cell values. Emit a *flag* ("verify this is
   intended for publication"), never a verdict.
+- **Group 4 (code-quality) vs group 8 (reproducibility) boundary:** code-quality
+  is "is the code *well-written* — readable, modular, well-named?"; reproducibility
+  is "would it *re-run and give the same result* — relative paths, seeds, run
+  order?". A reader notices the first by judging style and the second by asking
+  whether they could reproduce the output. This split is **provisional** — confirm
+  it (and who owns `reproducibility`) at the meeting.
+- **Group 8 name vs positioning (`decisions/0003`):** the group is
+  reproducibility-*supporting practices* the tool can see statically (seeds,
+  relative paths, run order) — **not** "does it reproduce when executed", which we
+  deliberately do not check. Keep the report wording careful so the group name does
+  not overclaim.
 - **Group 7 is almost entirely `mode: none` checks.** These render on the website
   and in the report's closing post-review checklist. Do **not** write AI-checkable
   checks here — the tool cannot see a Zenodo deposit. "Ask a colleague unfamiliar

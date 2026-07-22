@@ -187,6 +187,25 @@ The output of *this* planning session.
     criterion (source + rationale + fix). The shipped report never does this.
 - **Iterate the criteria** here. Expect the criteria to change.
 
+**Deferred criterion candidates** (agreed useful, held out of v1 pending validation):
+
+- `no-unused-files` (**repository-hygiene** / code-quality / data) — flag data files
+  that are read nowhere and code files that are never called. **Highest
+  false-positive risk in the hygiene group:** usage detection needs whole-repo
+  dataflow/call-graph reasoning, and legitimate cases break it (paths built at
+  runtime, globs, entry-point scripts, example data provided for users). If shipped:
+  `mode: ai`, severity `polish`, output as a **flag** ("these files don't appear to
+  be referenced — confirm they're needed"), **⚠️ when unsure**, never a hard `✗`.
+  Decide group placement (unused *code* → code-quality; stray *data* → data) at the
+  meeting. Validate against real repos before committing it.
+- `large-files-advisory` (**repository-hygiene**) — surface unusually large files
+  (individual files over ~50 MB; large binaries, datasets, checkpoints) for the author
+  to confirm. **Advisory only — a flag, never a `✗`**: large data is normal in science,
+  so a hard "too big → fail" is a false positive. Deferred because it needs the report
+  model to grow a dedicated **advisory/flag state** — the same gap the data group's
+  sensitive-data flag hits (`decisions/0005` has only ✓/✗/⚠️/➖). When included, keep the
+  host-limit hint (e.g. GitHub rejects files >100 MB) *without* assuming a specific host.
+
 ### Phase 5 — Website (Quarto) + release tooling (after validation, post-lecture)
 - Quarto renders the criteria bodies directly; superset incl. `mode: none` checks.
 - **Not a lecture deliverable** — the lecture ships the README only; the website
@@ -219,13 +238,14 @@ One group owner each; schema is frozen before authoring starts.
 
 | Group | Owner | Notes |
 |---|---|---|
-| orientation | | README, purpose, entry point, contact |
-| licensing-citation | | LICENSE, data licence, CITATION.cff |
+| structure | | README, purpose, entry point, contact, file & folder structure/names |
+| licensing-citation | Selina | LICENSE, data licence, CITATION.cff |
 | data | | availability statement, codebook, raw/derived, **sensitive-data flag** |
-| code-analysis | | structure, naming, absolute paths, seeds, comments, run order |
+| code-quality | Selina | code structure, modularity, naming, comments |
 | environment | | dependencies + versions, container, language version |
-| repository-hygiene | | `.gitignore`, junk, **secrets**, size |
-| archiving-release | | Zenodo/DOI/tag — mostly `mode: none` checks, website + post-review only |
+| repository-hygiene | Selina | `.gitignore`, junk, **secrets**, size |
+| archive-release | | Zenodo/DOI/tag — mostly `mode: none` checks, website + post-review only |
+| reproducibility | | absolute paths / `setwd()`, seeds, run order, deterministic outputs |
 
 Plus two **cross-cutting roles** (to prevent style/severity drift across groups —
 the main risk of a per-group split): one owner for **schema + compile + report
