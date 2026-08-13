@@ -12,7 +12,7 @@
   `summary`).
 
 **Why a field, not a convention:** the `evidence` field otherwise means opposite things
-in the two cases, and the deterministic pre-flight script — plus any future
+in the two cases, and the repository evidence collector — plus any future
 *declarative* runner that executes criteria without bespoke per-check code — cannot be
 left to *infer* whether a pattern hit means pass or fail. It must be explicit in the
 YAML. `pass_when` is also the minimal option: we rejected renaming `evidence` into

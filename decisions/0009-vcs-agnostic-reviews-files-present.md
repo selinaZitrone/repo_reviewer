@@ -29,7 +29,7 @@ assume the project uses git. No criterion may depend on `git` being installed, o
   never the core check.
 - A dedicated **`.gitignore` criterion is dropped**: it assumes git and is redundant
   with checking for junk files directly (the *effect*), which works for any repo.
-- Where git *is* present, the deterministic pre-flight script may use it as a fast
+- Where git *is* present, the repository evidence collector may use it as a fast
   path (e.g. `git ls-files`), but must fall back to a plain directory walk and must
   never require it.
 

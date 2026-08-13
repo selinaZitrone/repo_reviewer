@@ -1,8 +1,8 @@
-# 0006 — Deterministic checks run from a pre-flight script, not LLM eyeballing
+# 0006 — Deterministic checks run from a repository evidence collector, not LLM eyeballing
 
 **Decision:** The `mode: deterministic` checks (file existence, absolute-path
 regex, unpinned-versions, committed-secret patterns, `.gitignore` presence, …) run
-from a **small pre-flight script** that emits **JSON facts**. The skill feeds that
+from a small **repository evidence collector** that emits **JSON facts**. The skill feeds that
 JSON to the model, and the model may assert a deterministic fact (e.g. "no LICENSE
 file") **only** from the JSON — it never decides file existence itself. Pulled
 forward from the Phase 5 "declarative check runner" idea because it is what makes
