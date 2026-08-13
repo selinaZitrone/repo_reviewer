@@ -34,6 +34,28 @@ improve so a competent stranger could understand, trust, and reuse the work.
 
 ## How to evaluate each check
 
+### 1. Collect deterministic repository evidence
+
+If you have filesystem and shell access, locate this skill's directory and run:
+
+```text
+python <skill-directory>/scripts/collect_repository_evidence.py <repository-root>
+```
+
+Read the JSON from stdout before evaluating any check. The helper only inventories and
+pattern-matches files; it never executes repository code. Interpret its states as follows:
+
+- `pass` — trust the deterministic fact unless the cited artifact is clearly irrelevant.
+- `fail` — report the failure using the named missing artifact.
+- `needs-ai` — inspect the repository for an unlisted artifact satisfying the summary.
+- `candidate-fail` — inspect the redacted candidate locations and confirm or reject each;
+  never reproduce a suspected secret value in the report.
+
+This v1 skill requires filesystem and shell access. If the collector cannot be run,
+mark affected deterministic checks as ⚠️; never guess about absence.
+
+### 2. Judge every defined check
+
 Decide one state per check:
 
 - **✅ pass** — a satisfying piece of evidence is present / the judgment holds.
@@ -89,7 +111,8 @@ text; do not tag `✅`/`➖`.
 
 # Repository review
 
-_Context: Claude Code (agentic, filesystem)._ _Checks reviewability and completeness —
+_Context: <AI tool and access mode, e.g. "Claude Code (agentic, filesystem)">._
+_Checks reviewability and completeness —
 it does NOT run the code and does NOT verify the analysis reproduces._
 
 **What I understood this repo to be:** <1–2 sentences — the repo type and what it does,
