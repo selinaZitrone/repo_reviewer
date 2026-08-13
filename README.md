@@ -104,6 +104,10 @@ drafting template](docs/criterion-draft-template-for-google-docs.md).
 
 ## Meeting demo
 
+For a presenter-oriented explanation of the development architecture, generated
+end-user bundle, installation choices, and live demo, see the
+[presentation walkthrough](docs/presentation-walkthrough.md).
+
 For a useful comparison, run the same compiled criteria against:
 
 1. this repository (dogfooding);

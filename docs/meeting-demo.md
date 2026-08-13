@@ -3,6 +3,9 @@
 This demo is about the **pipeline**, not agreement on the final criteria. The current
 4 criteria / 11 checks are deliberately a small vertical slice.
 
+Use the [presentation walkthrough](presentation-walkthrough.md) as the main meeting
+narrative. This document contains the shorter demo timings and feedback checklist.
+
 ## Before the meeting
 
 ```text
