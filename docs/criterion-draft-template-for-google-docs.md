@@ -1,3 +1,9 @@
+# Criterion drafting template for Google Docs
+
+This is a collaboration worksheet for drafting and discussing criteria. It is
+not loaded by the reviewer. After the team agrees on a draft, transfer it to a
+Markdown file under `criteria/` that follows `criteria/_schema.md`.
+
 Title: (a sentence describing the good state of the criterion)
 Id: (kebab-case, permanent)
 Group: structure | licensing-citation | data | code-quality | environment | repository-hygiene | archive-release | reproducibility (choose one)

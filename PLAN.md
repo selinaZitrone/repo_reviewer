@@ -3,10 +3,11 @@
 > A tool that reviews a scientific data-analysis repository **before publication**
 > and returns an actionable, prioritised report of what to improve.
 > Author-facing, pre-publication, language-agnostic, runs inside the researcher's
-> own AI IDE (Claude Code, GitHub Copilot, Cursor, …).
+> own agentic coding tool (Claude Code, Codex, GitHub Copilot, …).
 
-Status: **planning**. This document is the shared plan for the team. It will be
-sent for external AI review before implementation begins.
+Status: **working prototype**. The agentic pipeline is implemented with four
+criteria / 11 checks. The criteria and report model remain proposals for the
+team to review.
 
 ---
 
@@ -30,7 +31,7 @@ stranger could understand, trust, and reuse the work.
 
 ### The prior-art gap we fill
 
-The prior-art sweep (see `research/sweep-notes.md` once written) found **no
+The prior-art sweep found **no
 author-facing, pre-publication, whole-repository, LLM-based reviewer.**
 Everything LLM-based faces *reviewers* or *meta-scientists* and reviews *papers*
 (ARA, Reproscreener, RECAP). Everything author-facing is deterministic-only and
@@ -53,7 +54,7 @@ from one criteria set. Hand-maintaining the website and the skill separately
 guarantees drift; deriving both from one record guarantees they agree.
 
 Every criterion is one markdown file with a small YAML frontmatter (structured,
-machine-facing) and a prose body (human-facing). The **website is a superset**
+machine-facing) and a prose body (human-facing). The **planned website is a superset**
 that renders every field; the **AI adapter** renders only the checkable subset.
 Neither audience reads text written for the other.
 
@@ -64,7 +65,7 @@ Each **check** carries a `mode` (not each criterion — see §3 and
 
 | Mode | Verified by | Example |
 |---|---|---|
-| **deterministic** | file/glob/regex checks, run from a script | LICENSE exists? `renv.lock` present? absolute paths in scripts? committed secrets? |
+| **deterministic** | file/glob/regex checks, run from a script | Root README or licence present? Dependency/environment record present? Possible secret indicators? |
 | **ai** | LLM judgment over content | Is the README actually informative? Can a stranger tell which script makes Fig. 3? |
 | **none** | not verifiable from the repo | Deposit on Zenodo, get a DOI, ask a colleague to run it |
 
@@ -84,9 +85,9 @@ chats and CI / GitHub Action integration are deferred until the core review pipe
 and criteria have been validated.
 
 **Deterministic checks run from a small script, not the LLM's own eyeballing.**
-A ~5-check repository evidence collector (file-exists globs, absolute-path regex,
-unpinned-versions, committed-secret patterns, `.gitignore` presence) emits JSON
-*facts* the skill feeds to the model. The model may assert a deterministic fact
+The current repository evidence collector emits JSON facts for four prototype
+checks: a root README, a root licence, a dependency/environment record, and
+possible secret indicators. The model may assert a deterministic fact
 (e.g. "no LICENSE file") **only** from this JSON — it never decides file existence
 itself, because LLMs hallucinate file *absence*. The script analyses files only;
 it does **not** run the repository's code (`decisions/0002`, `decisions/0006`).
@@ -133,19 +134,18 @@ Pulled forward from Phase 5 because it is what makes the demo reliable.
 Ordering rationale: **validation reshapes the criteria, so the website prose is
 written after validation, not before** — otherwise you write it twice.
 
-### Phase 0 — Prior-art sweep ✅ (done this session)
+### Phase 0 — Prior-art sweep ✅
 Landscape confirmed, gap confirmed, seven citable sources identified, closest
 predecessor (and its failure mode) found. → feeds `criteria/_sources.md`.
 
-### Phase 1 — Foundations (now → tomorrow's meeting)
-The output of *this* planning session.
-- [x] Criterion file **schema** (checks-based), frozen and exemplified.
-- [x] **Group taxonomy** (7 groups) = report sections = website nav = division of labour.
+### Phase 1 — Foundations ✅ (subject to team ratification)
+- [x] Draft criterion file **schema** (checks-based), encoded and exemplified.
+- [x] **Group taxonomy** (8 groups) = report sections = website nav = division of labour.
 - [x] **Source table** — raw material, each criterion cites its provenance.
-- [x] Two complete **exemplar criteria** to copy, not a spec to interpret.
+- [x] Four prototype **criteria** to test and revise.
 - [x] `decisions/` records.
 
-### Phase 2 — Criteria authoring (collaborative, starts at/after meeting)
+### Phase 2 — Criteria review and authoring (next, collaborative)
 - One group per person; schema frozen *before* they start (no merge conflicts).
 - Target a **tight, solid v1 set** — the essential criteria from the seven
   sources, not everything. Well-argued criteria beat exhaustive ones; no fixed
@@ -155,18 +155,17 @@ The output of *this* planning session.
   existing notes and richest in the sources (codebook, data licence, raw/derived
   separation, sensitive-data flag, `.gitignore`, secrets).
 
-### Phase 3 — Skill + report template + deterministic script (after criteria are roughed in)
-- A compile step (~40-line script) concatenates AI-facing check fields → the skill.
-- A small **repository evidence collector** runs the ~5 mechanical checks and
-  emits JSON *facts* the skill feeds to the model (pulled forward from Phase 5
-  because it is what makes the demo reliable). Analyses files only; never runs the
-  repo's code. → `decisions/0006`.
-- The **report template** encodes: the fixed `✓`/`✗`/`?` checklist, the priority
-  digest, the evidence-required rule, a **worked clean-report example** (all `✓`),
-  the version/model/date footer, and the not-a-repro disclaimer. → `decisions/0005`.
-- **Crude demo** can be assembled early (even for the meeting) to show
-  collaborators what they're writing criteria *for* — the single most socially
-  valuable artifact. Full skill waits for the criteria to exist.
+### Phase 3 — Minimal testable pipeline ✅ (prototype complete)
+- [x] A compiler validates criterion files and generates the shared skill.
+- [x] A **repository evidence collector** emits JSON facts for the four current
+  deterministic checks. It analyses files only and never runs repository code.
+  → `decisions/0006`.
+- [x] The **report instructions** encode the fixed `✓`/`✗`/`?` checklist, priority
+  digest, evidence-required rule, version/model/date footer, and not-a-repro
+  disclaimer. → `decisions/0005`.
+- [x] The generated bundle can be installed in Claude Code, Codex, and supported
+  GitHub Copilot agent surfaces.
+- [x] Automated tests cover compilation, collection, and report instructions.
 
 ### Phase 4 — Validation on the development corpus
 - Split the corpus: **dev set (~⅔, iterate freely)** vs **held-out set (touch
@@ -209,24 +208,28 @@ The output of *this* planning session.
   sensitive-data flag hits (`decisions/0005` has only ✓/✗/⚠️/➖). When included, keep the
   host-limit hint (e.g. GitHub rejects files >100 MB) *without* assuming a specific host.
 
-### Phase 5 — Website (Quarto) + release tooling (after validation, post-lecture)
+### Phase 5 — Website (Quarto) + release tooling (after validation)
 - Quarto renders the criteria bodies directly; superset incl. `mode: none` checks.
-- **Not a lecture deliverable** — the lecture ships the README only; the website
-  comes later, with prose written after Phase 4.
+- The website comes later, with prose written after Phase 4.
 - Then, opportunistically: harden/expand the deterministic script, other delivery
   contexts (chat, GitHub Action / Tier C), JSON report emitter, other tool adapters.
 
 ---
 
-## 5. Timeline anchors
+## 5. Near-term milestones
 
-- **T+16h — collaborator meeting.** Bring: schema (now checks-based — a proposal
-  to ratify), taxonomy + division of labour, source table, exemplars, and (ideally)
-  a crude demo run live against a no-README repo (dramatic) and one good repo.
-  Website not needed.
-- **T+7d — lecture.** Bring: working skill on the v1 criteria set, validated on the
-  corpus, a live demo, dogfood result, and the tool's **README**. No website, no
-  paper.
+### Collaborator meeting
+
+- Ratify or revise the checks-based schema, taxonomy, severities, and report model.
+- Demonstrate the current four-criterion pipeline on contrasting repositories.
+- Agree group ownership and the contribution workflow.
+- Expand and label the development corpus.
+
+### After the meeting
+
+- Incorporate the team's decisions into the schema and decision records.
+- Author the first agreed criteria set collaboratively.
+- Validate it on the development corpus before building the website.
 
 Reality check: prototype-fast, short-duration, not-high-priority, four PhDs.
 The plan is deliberately staged so the *criteria* (the durable, citable asset)
@@ -283,7 +286,7 @@ code-structure article (`s44271-025-00236-3`).
   shared. The criterion is "the data situation is unambiguous" (present / stated
   where-and-how / synthetic + regeneration code), never "data is present."
   Baked into the `data` group from the start.
-- **Sensitive-data flag, not finding.** Read filenames + directory listings +
+- **Sensitive-data flag, not finding (planned).** Read filenames + directory listings +
   column headers only — never cell values. Output: "verify this is intended for
   publication," never a verdict. Works in any file-reading tier.
 - **Dogfooding as a scope test.** repo-reviewer reviews itself. Correct behaviour
@@ -292,8 +295,8 @@ code-structure article (`s44271-025-00236-3`).
 - **Self-describing reports.** Every report footer stamps criteria version
   (semver, just a string), model ID, and date. Cheap; non-negotiable for a tool
   about rigor.
-- **Report can come back clean.** The template shows the model a full clean
-  example (all `✓`) so it doesn't infer that findings are expected.
+- **Report can come back clean.** The skill explicitly permits all checks to pass;
+  it does not require the model to invent findings.
 - **Uncertain is visible, never silent.** A check the tool cannot decide renders
   as `?` ("couldn't verify"), never as a pass and never as an omission — false
   negatives are marked, not hidden.

@@ -95,8 +95,8 @@ the generated `REVIEW.md`.
    intended section.
 
 See [criteria/_schema.md](criteria/_schema.md),
-[criteria/_groups.md](criteria/_groups.md), and the
-[criterion author template](docs/criterion-template-for-authors.md).
+[criteria/_groups.md](criteria/_groups.md), and the [Google Docs criterion
+drafting template](docs/criterion-draft-template-for-google-docs.md).
 
 ## Meeting demo
 
