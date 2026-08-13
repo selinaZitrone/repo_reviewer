@@ -71,17 +71,20 @@ Each **check** carries a `mode` (not each criterion — see §3 and
 `mode: none` checks live on the **website** and in the report's **closing
 post-review checklist** — the tool never nags about them.
 
-### Delivery: v1 is Claude Code only
+### Delivery: one skill for agentic tools
 
-v1 targets **one context: Claude Code** (agentic — filesystem + shell). Other
-contexts are deferred until the skill is good; the criteria set is the portable
-asset and the skill is a thin adapter, so porting later is cheap. The later ladder
-(sketched, not built): plain chat / uploaded zip (LLM-only, degraded); CI / GitHub
-Action (deterministic always, LLM optional). The report states which context it
-ran in.
+v1 targets the open **Agent Skills** format rather than one vendor. The same generated
+skill can be packaged for Claude Code, Codex, and supported GitHub Copilot agent
+surfaces. Tool-specific folders are installation adapters only; criteria and review
+rules are never maintained separately. → `decisions/0010`
+
+v1 requires an **agentic/filesystem** context in which the AI can run the read-only
+repository evidence collector, inspect files, and write `REVIEW.md`. Upload-only web
+chats and CI / GitHub Action integration are deferred until the core review pipeline
+and criteria have been validated.
 
 **Deterministic checks run from a small script, not the LLM's own eyeballing.**
-A ~5-check pre-flight script (file-exists globs, absolute-path regex,
+A ~5-check repository evidence collector (file-exists globs, absolute-path regex,
 unpinned-versions, committed-secret patterns, `.gitignore` presence) emits JSON
 *facts* the skill feeds to the model. The model may assert a deterministic fact
 (e.g. "no LICENSE file") **only** from this JSON — it never decides file existence
@@ -154,7 +157,7 @@ The output of *this* planning session.
 
 ### Phase 3 — Skill + report template + deterministic script (after criteria are roughed in)
 - A compile step (~40-line script) concatenates AI-facing check fields → the skill.
-- A small **deterministic pre-flight script** runs the ~5 mechanical checks and
+- A small **repository evidence collector** runs the ~5 mechanical checks and
   emits JSON *facts* the skill feeds to the model (pulled forward from Phase 5
   because it is what makes the demo reliable). Analyses files only; never runs the
   repo's code. → `decisions/0006`.
