@@ -13,6 +13,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import shutil
 import sys
 from datetime import date
 from pathlib import Path
@@ -22,22 +23,24 @@ import yaml
 # Canonical report-section order + human-readable heading (mirrors criteria/_groups.md).
 # Unknown groups append, titled by their raw id.
 GROUP_ORDER = [
-    "orientation",
+    "structure",
     "licensing-citation",
     "data",
-    "code-analysis",
+    "code-quality",
     "environment",
     "repository-hygiene",
-    "archiving-release",
+    "archive-release",
+    "reproducibility",
 ]
 GROUP_TITLES = {
-    "orientation": "Orientation & README",
+    "structure": "Structure & orientation",
     "licensing-citation": "Licensing & citation",
     "data": "Data",
-    "code-analysis": "Code",
+    "code-quality": "Code quality",
     "environment": "Environment & dependencies",
     "repository-hygiene": "Repository hygiene",
-    "archiving-release": "Archiving & release",
+    "archive-release": "Archive & release",
+    "reproducibility": "Reproducibility-supporting practices",
 }
 
 
@@ -151,8 +154,18 @@ def main() -> int:
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(skill, encoding="utf-8")
 
+    # Keep the distributed skill self-contained. Agentic hosts run this bundled,
+    # standard-library-only collector before making AI judgments.
+    bundled_script = args.out.parent / "scripts" / "collect_repository_evidence.py"
+    bundled_script.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(root / "tools" / "collect_repository_evidence.py", bundled_script)
+    shutil.copy2(root / "tools" / "distribution_README.md", args.out.parent / "README.md")
+
     n_checks = sum(len(c["checks"]) for c in criteria)
-    print(f"Compiled {len(criteria)} criteria ({n_checks} checks) -> {args.out}")
+    print(
+        f"Compiled {len(criteria)} criteria ({n_checks} checks) -> {args.out} "
+        f"(+ {bundled_script})"
+    )
     return 0
 
 
