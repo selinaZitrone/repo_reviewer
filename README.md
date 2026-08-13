@@ -43,9 +43,13 @@ development.
 
 ```text
 python -m pip install -r requirements-dev.txt
-python tools/compile_skill.py --version 0.1.0
-python -m unittest discover -s tests -v
+python tools/dev_check.py
 ```
+
+This runs the unit tests—including deterministic checks against four shared fixture
+repositories—and compiles a development build. For the one-time linked-skill setup,
+the fast edit/build/review loop, and manual AI expectations, see
+[How to test repo-reviewer](docs/how-to-test.md).
 
 The self-contained skill is generated at:
 

@@ -1,0 +1,26 @@
+{
+  "01-clear-failures": {
+    "readme-present": "fail",
+    "license-present": "needs-ai",
+    "env-file-present": "needs-ai",
+    "no-committed-secrets": "candidate-fail"
+  },
+  "02-mixed": {
+    "readme-present": "pass",
+    "license-present": "needs-ai",
+    "env-file-present": "pass",
+    "no-committed-secrets": "pass"
+  },
+  "03-ready": {
+    "readme-present": "pass",
+    "license-present": "pass",
+    "env-file-present": "pass",
+    "no-committed-secrets": "pass"
+  },
+  "04-unconventional": {
+    "readme-present": "pass",
+    "license-present": "needs-ai",
+    "env-file-present": "needs-ai",
+    "no-committed-secrets": "pass"
+  }
+}

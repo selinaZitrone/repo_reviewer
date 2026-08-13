@@ -7,9 +7,11 @@ This demo is about the **pipeline**, not agreement on the final criteria. The cu
 
 ```text
 python -m pip install -r requirements-dev.txt
-python tools/compile_skill.py --version 0.1.0-demo
-python -m unittest discover -s tests -v
+python tools/dev_check.py --version 0.1.0-demo --fixture all
 ```
+
+For first-time setup and the shared fixture expectations, follow
+[How to test repo-reviewer](how-to-test.md).
 
 Zip `build/repo-reviewer/` if colleagues should test without cloning the development
 repository.
