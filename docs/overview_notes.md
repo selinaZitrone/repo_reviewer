@@ -14,7 +14,9 @@ Summary of architecture and choices so far \+ open questions to discuss
 
 **Selling point:** Yes this is AI, but the backbone are our researched and categorized checklist items. The AI will only rely on those items and will be kept on a short leash. This means that the tool will be somewhat transparent and reliable although it’s AI.
 
-**Requirements to run the tool:** AI-integrated IDE (for now Claude Code; the same criteria can be re-rendered for Copilot or a copyable prompt later) \+ the repo to review
+**Requirements to run the tool:** an agentic AI tool with filesystem and shell access
+(Claude Code, Codex, or a supported GitHub Copilot agent surface) + the repo to review.
+Upload-only web chat support is deferred until the agentic pipeline is validated.
 
 ## The criteria for review
 
@@ -86,11 +88,21 @@ See also:
 
 ### The workflow
 
-![][image2]
+```text
+criteria/*.md -> compile_skill.py -> shared SKILL.md
+                                      |
+target repository -> repository evidence collector -> JSON facts
+                                      |
+                                      v
+                             AI judgments -> REVIEW.md
+```
 
-- Skill is compiled from a **skill template** and the **criteria files** \-\> Different skill templates depending on the goal (Claude Skill, GH Copilot prompt, Copyable prompt  
-- If skill is run in local environment: Use a simple check script for deterministic checks (e.g. README present/not present) \-\> This produces a temporary JSON that the AI Skill uses to judge deterministic criteria  
-  - Cannot be used if the checker is a copyable prompt e.g. for Chat GPT, then the fallback should be AI checks rather than deterministic checks
+- One open-standard skill is compiled from the **skill template** and the **criteria
+  files**. Claude Code, Codex, and supported Copilot agent surfaces use the same
+  generated `SKILL.md`; only the installation location differs.
+- The skill runs the repository evidence collector for deterministic checks (e.g.
+  README present/not present). The collector produces JSON facts that the AI uses
+  alongside its judgment-based checks.
 
 ## The report template
 
