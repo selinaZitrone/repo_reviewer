@@ -17,3 +17,8 @@ its synthetic input internally and writes `outputs/pollinator-summary.txt`.
 
 No research data are distributed with this fixture. The MIT licence in `LICENSE`
 covers the code and documentation.
+
+## Questions and citation
+
+Use the repository issue tracker for questions. Citation metadata for this synthetic
+fixture is provided in `CITATION.cff`.

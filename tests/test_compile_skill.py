@@ -8,9 +8,26 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
 
 import compile_skill
+import collect_repository_evidence
 
 
 class CompileSkillTests(unittest.TestCase):
+    def test_every_deterministic_check_has_a_collector_fact(self):
+        root = Path(__file__).resolve().parents[1]
+        criteria = compile_skill.load_criteria(root / "criteria")
+        expected = {
+            (criterion["id"], check["id"])
+            for criterion in criteria
+            for check in criterion["checks"]
+            if check["mode"] == "deterministic"
+        }
+        actual = {
+            (fact["criterion_id"], fact["check_id"])
+            for fact in collect_repository_evidence.collect_facts(root)["facts"]
+        }
+
+        self.assertEqual(expected, actual)
+
     def test_current_groups_render_in_canonical_order_with_titles(self):
         root = Path(__file__).resolve().parents[1]
         rendered = compile_skill.render_criteria(compile_skill.load_criteria(root / "criteria"))
@@ -44,6 +61,9 @@ class CompileSkillTests(unittest.TestCase):
             )
             self.assertTrue((out.parent / "README.md").is_file())
             self.assertIn("### Structure & orientation", out.read_text(encoding="utf-8"))
+            distribution_readme = (out.parent / "README.md").read_text(encoding="utf-8")
+            self.assertIn("criteria and", distribution_readme)
+            self.assertNotIn("{{CRITERIA_COUNT}}", distribution_readme)
         finally:
             shutil.rmtree(temporary, ignore_errors=True)
 

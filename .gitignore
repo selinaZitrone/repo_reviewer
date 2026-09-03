@@ -9,8 +9,12 @@ REVIEW.md
 # Python
 __pycache__/
 *.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
+*.egg-info/
 .venv/
 venv/
+dist/
 
 # R
 .Rproj.user/

@@ -1,0 +1,8 @@
+cff-version: 1.2.0
+message: Cite this fixture when reusing it.
+title: Urban pollinator analysis fixture
+version: 1.0.0
+date-released: 2026-08-13
+authors:
+  - family-names: Contributor
+    given-names: Example

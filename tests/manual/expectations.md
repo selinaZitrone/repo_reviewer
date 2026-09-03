@@ -1,67 +1,79 @@
 # Manual fixture expectations
 
-Read this only **after** an agent has produced its `REVIEW.md`. Keeping the expected
-answers outside each fixture reduces the chance that the reviewer simply repeats them.
+Read this only **after** an agent has produced `REVIEW.md`. Keeping expectations
+outside each fixture reduces the chance that the reviewer simply repeats them.
 
-AI judgments can vary at the margins. Treat a difference as something to inspect, not
-automatically as a bug. Deterministic states are asserted exactly by the unit tests.
+The exact deterministic states are asserted in `expected-deterministic.json`. The
+notes below are high-confidence anchors for AI checks, not a frozen benchmark for all
+56 checks. The expanded criteria set is entering collaborator validation, so uncertain
+or disputed outcomes should be recorded rather than silently rewritten here.
+
+For every fixture, conditional checks should be marked not applicable when their
+preconditions are absent. Examples include data-format checks where no data is
+distributed, HPC documentation for a small local workflow, seeds where no relevant
+randomness is used, and publication mappings where no paper exists.
 
 ## `01-clear-failures`
 
-Purpose: check obvious missing-artifact findings and secret-candidate confirmation.
+Purpose: obvious missing artifacts and confirmation of a deliberately fake secret
+candidate.
 
-- README presence: fail. The other README checks should be not applicable because the
-  README is absent.
-- Licence presence: fail after the AI confirms that no full licence text exists. Code
-  licence quality and data licence should be not applicable.
-- Environment record: fail. Pinning and language-version checks should be not
-  applicable because no environment record exists.
-- Secrets: pass after confirming that `settings.ini` contains an explicit fake
-  test value. The collector should emit `candidate-fail` without exposing its value.
-
-Expected applicable tally: 1 pass and 3 failures.
+- README presence and substantive content fail. Dependent README-quality checks are
+  not applicable rather than repeated failures.
+- Licence presence fails after confirming that no full licence text exists; dependent
+  licence-quality checks are not applicable.
+- Environment presence fails; dependent version and setup-quality checks are not
+  applicable.
+- The collector emits a secret candidate for `settings.ini` without exposing the
+  value. The AI should confirm that the file explicitly labels it as a fake fixture and
+  pass the no-secrets check.
+- Portability and junk checks pass.
 
 ## `02-mixed`
 
-Purpose: check a realistic mixture of passes and actionable failures.
+Purpose: a realistic mixture of orientation passes and actionable documentation gaps.
 
-- README presence and purpose: pass.
-- Run instructions: fail because no entry point or exact command is given.
-- README/repository consistency: pass; the stated `src/` folder exists.
-- Licence presence: fail. Licence quality and data licence should be not applicable.
-- Environment record: pass; `requirements.txt` exists.
-- Exact dependency versions: fail; one dependency is unpinned and one has only a lower
-  bound.
-- Language version: fail because Python itself is not versioned.
-- Secrets: pass.
-
-Expected applicable tally: 5 passes and 4 failures.
+- README presence, substantive content, and purpose pass.
+- Exact run instructions, run order, inputs/outputs, and a structure overview fail or
+  remain clearly unsupported; `src/` existing is not enough to infer an entry point.
+- Licence presence fails, with dependent licence-quality checks not applicable.
+- The environment record passes because `requirements.txt` exists, but exact dependency
+  versions and the Python version fail.
+- Citation/contact information is absent.
+- Secret, junk, and portability checks pass.
 
 ## `03-ready`
 
-Purpose: verify that the reviewer can return a clean report rather than inventing work.
+Purpose: confirm that a compact, well-documented synthetic repository can produce a
+clean result for every applicable check.
 
-- All four README checks: pass.
-- Licence presence and OSI-approved code licence: pass.
-- Data licence: not applicable because no data are distributed.
-- All three environment checks: pass.
-- Secrets: pass.
+- README orientation, run instructions, input/output locations, structure, and
+  consistency pass.
+- Licence, citation, environment, secret, junk, and portability checks pass.
+- The analysis uses no external research data and no result-affecting randomness;
+  related conditional checks are not applicable.
+- The workflow is small enough that a single documented command is adequate; an HPC
+  guide or published container is not applicable.
+- Code naming, comments, and organisation should pass without demanding unnecessary
+  abstraction or commentary.
 
-Expected applicable tally: 10 passes and no failures.
+If this fixture receives a failure, check first whether the new criterion has an
+unstated applicability assumption. A clean outcome is required; the reviewer should
+not invent work merely to populate the report.
 
 ## `04-unconventional`
 
-Purpose: check the `needs-ai` long-tail path. Valid evidence is present, but two
-artifacts use locations or names the collector does not recognise mechanically.
+Purpose: test long-tail evidence that the collector cannot recognise from standard
+filenames.
 
-- All four README checks: pass.
-- Licence presence: the collector emits `needs-ai`; the AI should find and accept the
-  full MIT text in `README.md`. Licence quality should pass.
-- Data licence: not applicable because no data are distributed.
-- Environment presence: the collector emits `needs-ai`; the AI should accept
-  `environment-notes.md` as an environment record.
-- Exact dependency versions and language version: pass based on
-  `environment-notes.md` and the README.
-- Secrets: pass.
+- README orientation, run instructions, citation, contact route, and structure pass.
+- Licence presence and machine readability initially emit `needs-ai`; the AI should
+  accept the full MIT text embedded in `README.md` and pass the OSI check.
+- Environment presence emits `needs-ai`; the AI should accept
+  `environment-notes.md`, including its exact dependency and Python versions.
+- No research data are distributed and no randomness is used, so related conditional
+  checks are not applicable.
+- Secret, junk, portability, naming, comments, and code-organisation checks pass.
 
-Expected applicable tally: 10 passes and no failures.
+This fixture should be clean for applicable checks even though two valid artifacts use
+unconventional locations.

@@ -10,6 +10,14 @@ negatives.
 Use Python 3.12 with NumPy 2.0.1, then run `python workflow.py`. The script uses
 synthetic values embedded in the code and prints a summary; no data are included.
 
+The root contains only this README, `environment-notes.md`, and the `workflow.py`
+entry point. The repository issue tracker is the contact route for questions.
+
+## Citation
+
+Cite *Soil moisture example*, repo-reviewer contributors (2026), version 1.0. No DOI
+exists because this is a synthetic test fixture rather than an archived release.
+
 ## Software licence
 
 The code is available under the MIT License.

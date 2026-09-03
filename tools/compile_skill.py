@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compile the criteria/ set into a Claude Code skill.
+"""Compile the criteria set into a tool-neutral Agent Skill.
 
 Reads every criterion file (criteria/<group>/<id>.md), pulls the YAML frontmatter
 (the `checks`), renders them grouped by report section, and injects the result into
@@ -13,6 +13,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import re
 import shutil
 import sys
 from datetime import date
@@ -42,6 +43,9 @@ GROUP_TITLES = {
     "archive-release": "Archive & release",
     "reproducibility": "Reproducibility-supporting practices",
 }
+ID_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+CHECK_MODES = {"deterministic", "ai", "none"}
+SEVERITIES = {"must-fix", "should-fix", "polish"}
 
 
 def parse_frontmatter(text: str, path: Path) -> dict:
@@ -57,13 +61,73 @@ def parse_frontmatter(text: str, path: Path) -> dict:
 def load_criteria(criteria_dir: Path) -> list[dict]:
     """Load every criterion file. Skips files whose name starts with '_'."""
     criteria = []
+    criterion_ids: set[str] = set()
+    source_registry = criteria_dir / "_sources.md"
+    known_sources = (
+        set(
+            re.findall(
+                r"^\| `([^`]+)` \|",
+                source_registry.read_text(encoding="utf-8"),
+                flags=re.MULTILINE,
+            )
+        )
+        if source_registry.is_file()
+        else set()
+    )
     for md in sorted(criteria_dir.glob("*/*.md")):
         if md.name.startswith("_"):
             continue
-        fm = parse_frontmatter(md.read_text(encoding="utf-8"), md)
+        text = md.read_text(encoding="utf-8")
+        fm = parse_frontmatter(text, md)
         for field in ("id", "title", "group", "checks"):
             if field not in fm:
                 raise ValueError(f"{md}: frontmatter missing required field '{field}'.")
+        if not ID_PATTERN.fullmatch(str(fm["id"])):
+            raise ValueError(f"{md}: criterion id must be kebab-case.")
+        if fm["id"] in criterion_ids:
+            raise ValueError(f"{md}: duplicate criterion id '{fm['id']}'.")
+        criterion_ids.add(fm["id"])
+        if md.stem != fm["id"]:
+            raise ValueError(f"{md}: filename must match criterion id '{fm['id']}'.")
+        if fm["group"] not in GROUP_ORDER:
+            raise ValueError(f"{md}: unknown group '{fm['group']}'.")
+        if md.parent.name != fm["group"]:
+            raise ValueError(f"{md}: parent folder must match group '{fm['group']}'.")
+        if not isinstance(fm.get("sources"), list) or not fm["sources"]:
+            raise ValueError(f"{md}: 'sources' must be a non-empty list.")
+        unknown_sources = set(fm["sources"]) - known_sources if known_sources else set()
+        if unknown_sources:
+            names = ", ".join(sorted(str(item) for item in unknown_sources))
+            raise ValueError(f"{md}: unknown source id(s): {names}.")
+        if not isinstance(fm["checks"], list) or not fm["checks"]:
+            raise ValueError(f"{md}: 'checks' must be a non-empty list.")
+
+        check_ids: set[str] = set()
+        for check in fm["checks"]:
+            for field in ("id", "mode", "severity", "summary"):
+                if field not in check:
+                    raise ValueError(f"{md}: a check is missing '{field}'.")
+            check_id = str(check["id"])
+            if not ID_PATTERN.fullmatch(check_id):
+                raise ValueError(f"{md}: check id '{check_id}' must be kebab-case.")
+            if check_id in check_ids:
+                raise ValueError(f"{md}: duplicate check id '{check_id}'.")
+            check_ids.add(check_id)
+            if check["mode"] not in CHECK_MODES:
+                raise ValueError(f"{md}: check '{check_id}' has invalid mode '{check['mode']}'.")
+            if check["severity"] not in SEVERITIES:
+                raise ValueError(
+                    f"{md}: check '{check_id}' has invalid severity '{check['severity']}'."
+                )
+            if check.get("pass_when", "present") not in {"present", "absent"}:
+                raise ValueError(f"{md}: check '{check_id}' has invalid pass_when value.")
+            if check["mode"] == "deterministic" and not check.get("evidence"):
+                raise ValueError(f"{md}: deterministic check '{check_id}' needs evidence.")
+            if check["mode"] == "none" and check.get("evidence"):
+                raise ValueError(f"{md}: mode-none check '{check_id}' must omit evidence.")
+
+        if "## Why it matters" not in text or "## How to satisfy it" not in text:
+            raise ValueError(f"{md}: body must contain 'Why it matters' and 'How to satisfy it'.")
         fm["_path"] = md
         criteria.append(fm)
     return criteria
@@ -159,9 +223,14 @@ def main() -> int:
     bundled_script = args.out.parent / "scripts" / "collect_repository_evidence.py"
     bundled_script.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(root / "tools" / "collect_repository_evidence.py", bundled_script)
-    shutil.copy2(root / "tools" / "distribution_README.md", args.out.parent / "README.md")
-
     n_checks = sum(len(c["checks"]) for c in criteria)
+    distribution_readme = (root / "tools" / "distribution_README.md").read_text(
+        encoding="utf-8"
+    )
+    distribution_readme = distribution_readme.replace("{{CRITERIA_COUNT}}", str(len(criteria)))
+    distribution_readme = distribution_readme.replace("{{CHECK_COUNT}}", str(n_checks))
+    (args.out.parent / "README.md").write_text(distribution_readme, encoding="utf-8")
+
     print(
         f"Compiled {len(criteria)} criteria ({n_checks} checks) -> {args.out} "
         f"(+ {bundled_script})"

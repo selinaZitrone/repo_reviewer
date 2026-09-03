@@ -1,119 +1,114 @@
 # repo-reviewer
 
-A publication-readiness reviewer for scientific data-analysis repositories. It
-produces an evidence-backed `REVIEW.md` checklist of what to improve before a
-repository is published or archived.
+`repo-reviewer` is a publication-readiness reviewer for scientific data-analysis
+repositories. It generates an evidence-backed `REVIEW.md` checklist that helps authors
+improve a repository before publishing or archiving it.
 
-> **Prototype:** the pipeline currently contains 4 criteria / 11 checks. The
-> criteria are intentionally incomplete while the team reviews them.
+The project is ready for collaborator testing. Its criteria remain a working draft:
+testers should report false positives, false negatives, unclear applicability, and
+missing criteria before the first release.
 
-The tool reviews files without executing the repository's code. It does not claim
-that an analysis reproduces, does not assign a score or badge, and does not modify
-the repository except for writing `REVIEW.md` in an agentic run.
+The reviewer reads repository files but never executes the repository's code. It does
+not claim that an analysis reproduces, assign a score or badge, or modify the reviewed
+repository beyond writing `REVIEW.md`.
 
-## How the prototype works
+## How it works
 
 ```text
-criteria/*.md
-     │
-     ├── compile_skill.py ──> shared SKILL.md + evidence collector
-     │
-target repository
-     │
-     ├── collect_repository_evidence.py ──> deterministic facts (JSON)
-     │                            │
-     │                            ▼
-     └──────────────────────> AI judgments ──> REVIEW.md
+criteria/<group>/<criterion>.md
+                │
+                ├── tools/compile_skill.py
+                ▼
+       build/repo-reviewer/          target repository
+       ├── SKILL.md                         │
+       ├── README.md                        ├── deterministic evidence
+       └── scripts/collector                ├── AI judgments
+                                            ▼
+                                         REVIEW.md
 ```
 
-`criteria/` is the source of truth. The compiler projects those criteria into one
-[open Agent Skills](https://agentskills.io/) bundle. The same `SKILL.md` format is
-supported by [Claude Code](https://code.claude.com/docs/en/skills),
-[Codex](https://learn.chatgpt.com/docs/build-skills), and current
-[GitHub Copilot agent surfaces](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills).
+The Markdown files under `criteria/` are the source of truth. The compiler validates
+their schema and generates one tool-neutral [Agent Skills](https://agentskills.io/)
+bundle. That bundle can be tested with Claude Code, Codex, and GitHub Copilot.
 
-This v1 requires an agentic tool with filesystem and shell access. The bundled
-collector creates JSON facts; the AI reads those facts, inspects the repository for
-judgment-based checks, and writes `REVIEW.md`. Upload-only web chats are deferred.
+## Quick start for contributors
 
-## Build and test
+Requirements: Python 3.10 or newer.
 
-Requirements: Python 3.10+; PyYAML is needed only to compile criteria during
-development.
-
-```text
+```bash
+python -m venv .venv
 python -m pip install -r requirements-dev.txt
 python tools/dev_check.py
 ```
 
-This runs the unit tests—including deterministic checks against four shared fixture
-repositories—and compiles a development build. For the one-time linked-skill setup,
-the fast edit/build/review loop, and manual AI expectations, see
-[How to test repo-reviewer](docs/how-to-test.md).
+Activate `.venv` before the install on systems where `python` does not automatically
+use it. The full Windows, macOS/Linux, VS Code, Claude Code, Codex, and GitHub Copilot
+instructions are in [CONTRIBUTING.md](CONTRIBUTING.md).
 
-The self-contained skill is generated at:
+`dev_check.py` runs the unit and deterministic fixture tests, validates all criterion
+files, and builds the distributable skill under `build/repo-reviewer/`. The `build/`
+directory is generated and ignored; never edit it by hand.
 
-```text
-build/repo-reviewer/
-├── README.md
-├── SKILL.md
-└── scripts/
-    └── collect_repository_evidence.py
+## Repository map
+
+| Path | Purpose |
+|---|---|
+| `criteria/` | Canonical criteria plus schema, groups, sources, template, and backlog |
+| `tools/` | Compiler, read-only evidence collector, development checks, and setup helper |
+| `tests/` | Unit tests and safe manual-review fixtures |
+| `decisions/` | Short records explaining settled product and architecture choices |
+| `AGENTS.md` | Shared project instructions for Codex and supported Copilot surfaces |
+| `CLAUDE.md` | Claude Code adapter importing the shared project instructions |
+| `PLAN.md` | Current scope, milestones, and unresolved product decisions |
+
+## Build and install the development skill
+
+Build it:
+
+```bash
+python tools/dev_check.py
 ```
 
-`build/` is generated and ignored by git. For a release or meeting handout, zip the
-`build/repo-reviewer/` directory after compiling it.
+Preview and then create a user-level development link for one or more tools:
 
-## Try it with an agentic tool
+```bash
+python tools/setup_dev_skill.py --dry-run codex
+python tools/setup_dev_skill.py codex
+```
 
-Copy the generated `repo-reviewer` directory into a skill location recognized by
-your tool:
-
-| Tool | User-level location | Project-level location |
-|---|---|---|
-| Claude Code | `~/.claude/skills/repo-reviewer/` | `.claude/skills/repo-reviewer/` |
-| Codex | `~/.agents/skills/repo-reviewer/` | `.agents/skills/repo-reviewer/` |
-| GitHub Copilot | `~/.agents/skills/repo-reviewer/` | `.github/skills/repo-reviewer/` or `.agents/skills/repo-reviewer/` |
-
-Then open the repository to review and ask:
+Replace `codex` with `claude` or `copilot`, or pass several names. The helper refuses
+to overwrite an existing installation. Open a fixture or target repository in the
+chosen agent and ask:
 
 ```text
 Use the repo-reviewer skill to review this repository before publication.
 ```
 
-Claude Code can also be invoked with `/repo-reviewer`, Codex with
-`$repo-reviewer`, and Copilot CLI with `/repo-reviewer`. Exact invocation UI varies
-by product; natural-language invocation works through the skill description.
+Explicit invocations are `$repo-reviewer` in Codex and `/repo-reviewer` in Claude Code
+and GitHub Copilot. See [CONTRIBUTING.md](CONTRIBUTING.md) for tool-specific locations,
+manual test procedure, and the feedback template.
 
-Project-level installation adds skill files to the target working tree. Use a
-user-level installation if the target repository must remain untouched apart from
-the generated `REVIEW.md`.
+## Add or edit criteria
 
-## Modify a criterion
+Start with:
 
-1. Copy one of the worked criteria under `criteria/`.
-2. Keep its criterion and check IDs stable once published.
-3. Recompile the skill.
-4. Run the tests.
-5. Inspect `build/repo-reviewer/SKILL.md` to confirm the check appears under the
-   intended section.
+- [criterion schema](criteria/_schema.md);
+- [group definitions](criteria/_groups.md);
+- [authoring template](criteria/_authoring-template.md);
+- [source registry](criteria/_sources.md);
+- [open criteria questions](criteria/_backlog.md).
 
-See [criteria/_schema.md](criteria/_schema.md),
-[criteria/_groups.md](criteria/_groups.md), and the [Google Docs criterion
-drafting template](docs/criterion-draft-template-for-google-docs.md).
+After changing a criterion, run `python tools/dev_check.py` and inspect its generated
+section in `build/repo-reviewer/SKILL.md`. A deterministic check also requires a fact
+in `tools/collect_repository_evidence.py`; the test suite checks this contract.
 
-## Meeting demo
+## Current testing focus
 
-For a presenter-oriented explanation of the development architecture, generated
-end-user bundle, installation choices, and live demo, see the
-[presentation walkthrough](docs/presentation-walkthrough.md).
+Use the controlled fixtures first, then a labelled development corpus of real
+repositories. Write expected findings before each run and compare check states and
+evidence rather than prose style. Keep held-out repositories untouched until the
+criteria and instructions have stabilised.
 
-For a useful comparison, run the same compiled criteria against:
-
-1. this repository (dogfooding);
-2. a small repository with no README or licence;
-3. one repository the team considers publication-ready;
-4. optionally, two different agentic tools using the same compiled skill.
-
-Compare individual check states and evidence, not writing style. Record the tool,
-model, access mode, date, and criteria version for every run.
+The import from the collaborator worksheet is complete. The small set of obvious
+issues intentionally deferred for team discussion is recorded in
+`criteria/_backlog.md`.

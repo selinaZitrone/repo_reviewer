@@ -22,8 +22,7 @@ assume the project uses git. No criterion may depend on `git` being installed, o
 
 - Hygiene criteria are phrased as "no X is **present**", not "no X is **committed**".
   The naming follows: `no-committed-secrets` → `no-secrets-present`;
-  `no-committed-junk` → `no-junk-files`. (The existing committed exemplar under
-  `criteria/repository-hygiene/` is to be reconciled to this when formalised.)
+  `no-committed-junk` → `no-junk-files`. The canonical criteria now use these names.
 - git-specific remediation (purge a leaked secret from history with `git filter-repo`;
   add a `.gitignore`) is **advice for git users** in the body's *How to satisfy it* —
   never the core check.

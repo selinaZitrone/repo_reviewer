@@ -46,7 +46,8 @@ Read the JSON from stdout before evaluating any check. The helper only inventori
 pattern-matches files; it never executes repository code. Interpret its states as follows:
 
 - `pass` — trust the deterministic fact unless the cited artifact is clearly irrelevant.
-- `fail` — report the failure using the named missing artifact.
+- `fail` — report the failure using the named missing artifact, unless the check is
+  made not applicable by the contingency rule below.
 - `needs-ai` — inspect the repository for an unlisted artifact satisfying the summary.
 - `candidate-fail` — inspect the redacted candidate locations and confirm or reject each;
   never reproduce a suspected secret value in the report.
@@ -74,7 +75,7 @@ answer — better than guessing either way.
 
 **Polarity (`pass_when`).** Default is `pass_when: present` — the check passes when a
 satisfying piece of evidence is **found**. A check marked **`pass_when: absent`**
-(committed secrets, absolute paths, committed junk) is the reverse: it **passes when the
+(secrets, absolute paths, generated junk) is the reverse: it **passes when the
 evidence is NOT found**. If you *find* the listed pattern, that is a ❌ — cite the
 offending path/line, and the fix is to remove/replace it to meet the summary.
 
@@ -86,10 +87,10 @@ no prose. (For an *absence* check — where the evidence is a violation to find,
 thing to add — the fix is "remove/replace the flagged item".)
 
 **Contingent checks (avoid double-counting).** Within a criterion, if a
-`deterministic` presence check fails (e.g. there is no licence file at all), mark that
-criterion's `ai` *quality* checks (e.g. "is the licence OSI-approved?") as ➖
-not-applicable — you cannot assess the quality of something absent. Report the
-underlying gap **once**, as the presence failure.
+`deterministic` presence check fails (e.g. there is no README or licence at all), mark
+every later check whose answer depends on that artifact as ➖ not-applicable,
+regardless of its mode. You cannot assess the content, format, or quality of something
+absent. Report the underlying gap **once**, as the presence failure.
 
 ## The criteria (checks)
 

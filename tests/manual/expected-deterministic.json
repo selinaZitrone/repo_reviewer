@@ -1,26 +1,50 @@
 {
   "01-clear-failures": {
     "readme-present": "fail",
+    "readme-has-content": "fail",
     "license-present": "needs-ai",
+    "license-machine-readable": "needs-ai",
+    "code-citation-present": "needs-ai",
     "env-file-present": "needs-ai",
-    "no-committed-secrets": "candidate-fail"
+    "no-secrets-present": "candidate-fail",
+    "no-junk-files": "pass",
+    "no-absolute-paths": "pass",
+    "no-setwd-or-chdir": "pass"
   },
   "02-mixed": {
     "readme-present": "pass",
+    "readme-has-content": "pass",
     "license-present": "needs-ai",
+    "license-machine-readable": "needs-ai",
+    "code-citation-present": "needs-ai",
     "env-file-present": "pass",
-    "no-committed-secrets": "pass"
+    "no-secrets-present": "pass",
+    "no-junk-files": "pass",
+    "no-absolute-paths": "pass",
+    "no-setwd-or-chdir": "pass"
   },
   "03-ready": {
     "readme-present": "pass",
+    "readme-has-content": "pass",
     "license-present": "pass",
+    "license-machine-readable": "pass",
+    "code-citation-present": "pass",
     "env-file-present": "pass",
-    "no-committed-secrets": "pass"
+    "no-secrets-present": "pass",
+    "no-junk-files": "pass",
+    "no-absolute-paths": "pass",
+    "no-setwd-or-chdir": "pass"
   },
   "04-unconventional": {
     "readme-present": "pass",
+    "readme-has-content": "pass",
     "license-present": "needs-ai",
+    "license-machine-readable": "needs-ai",
+    "code-citation-present": "pass",
     "env-file-present": "needs-ai",
-    "no-committed-secrets": "pass"
+    "no-secrets-present": "pass",
+    "no-junk-files": "pass",
+    "no-absolute-paths": "pass",
+    "no-setwd-or-chdir": "pass"
   }
 }

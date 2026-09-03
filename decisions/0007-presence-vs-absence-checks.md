@@ -25,7 +25,7 @@ from the `summary` good-state, with any detailed remedy prose on the website).
 
 **Rule of thumb for authors:** if a check would make you say "good, I didn't find
 any…", it is `pass_when: absent`. Worked example:
-`criteria/repository-hygiene/no-committed-secrets.md`.
+`criteria/repository-hygiene/no-secrets-present.md`.
 
 ## Open question — a dual "passes-on / fails-on" evidence list? (raised 2026-07-21)
 
@@ -59,5 +59,5 @@ back-compatible and no existing criterion changes, the same test by which
   **standalone** "fails when X" bullet is not — that is a second polarity in disguise.
 - Fuller rationale for a failure mode goes in the prose body, not the evidence list.
 
-**To decide:** the cross-cutting **schema owner** (PLAN.md §6), at/after the meeting —
+**To decide:** the cross-cutting **schema owner** (PLAN.md §6), during collaborator testing —
 a schema-level call, not a per-criterion one, or the eight groups drift apart.
