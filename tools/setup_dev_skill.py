@@ -1,8 +1,15 @@
 #!/usr/bin/env python3
-"""Link the generated repo-reviewer skill into a user-level agent skill folder.
+"""Make the generated skill visible to selected AI tools during development.
 
-The helper never deletes or replaces an existing destination. On Windows it uses
-a directory junction; on other platforms it uses a directory symlink.
+The helper links ``build/repo-reviewer`` to each selected tool's user-level skill
+directory. Rebuilding the skill therefore updates the installed development version
+without another copy step.
+
+Safety properties:
+- ``--dry-run`` reports the source and destination without changing the filesystem.
+- Existing destinations are never deleted, moved, or replaced.
+- No network access or elevated privileges are requested.
+- On Windows the link is a directory junction; elsewhere it is a symbolic link.
 """
 from __future__ import annotations
 
@@ -59,17 +66,27 @@ def create_link(source: Path, destination: Path, dry_run: bool = False) -> str:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  python tools/setup_dev_skill.py --dry-run codex\n"
+            "  python tools/setup_dev_skill.py claude codex copilot\n\n"
+            "For a one-off test, you can skip this helper and copy "
+            "build/repo-reviewer into a project-level skill folder instead."
+        ),
+    )
     parser.add_argument(
         "tools",
         nargs="+",
         choices=("codex", "claude", "copilot"),
-        help="Agent tools that should see the development skill.",
+        help="AI tools whose personal skill directories should link to the build.",
     )
     parser.add_argument(
         "--dry-run",
         action="store_true",
-        help="Print the links without changing user-level directories.",
+        help="Show the proposed links without creating directories or links.",
     )
     args = parser.parse_args()
 

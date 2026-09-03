@@ -1,153 +1,70 @@
-# Contributing to repo-reviewer
+# Contributing
 
-This guide is for co-authors who want to edit criteria, run the automated checks, or
-test the generated skill with an AI coding agent. The commands are the same on every
-IDE; tool-specific sections below cover the initial setup.
+For first-time setup, IDE instructions, and an explanation of what the helper script does, see [README.md](README.md).
 
-## 1. Clone and create a Python environment
+The normal contributor workflow is:
 
-Requirements: Git and Python 3.10 or newer.
+1. Edit the criteria or reviewer instructions.
+2. Rebuild and test the skill.
+3. Install the generated skill in a target repository.
+4. Ask an AI assistant to review that repository and inspect the resulting `REVIEW.md`.
 
-```bash
-git clone https://github.com/selinaZitrone/repo_reviewer.git
-cd repo_reviewer
-python -m venv .venv
-```
+## 1. Edit the skill sources
 
-Activate the environment:
+### Change a criterion
 
-```text
-Windows PowerShell:  .\.venv\Scripts\Activate.ps1
-macOS/Linux:         source .venv/bin/activate
-```
+Criteria live in `criteria/<group>/<criterion-id>.md`. Copy `criteria/_authoring-template.md` when adding a criterion, then fill in all required fields.
 
-After activation, install the one development dependency and run the full local check:
+If a check can be automated reliably, update `tools/collect_repository_evidence.py` and add a test. Otherwise, leave it for the AI reviewer to assess from the repository context.
+
+### Change the reviewer or report
+
+Edit `tools/skill_template.md` to change:
+
+- how the reviewer evaluates a repository;
+- how findings are prioritised;
+- the structure and wording of the generated `REVIEW.md`.
+
+Do not edit `build/repo-reviewer/SKILL.md` directly. It is generated from the template and criteria and will be overwritten during the next build.
+
+## 2. Rebuild and test
+
+The first time, install the development dependencies:
 
 ```bash
 python -m pip install -r requirements-dev.txt
+```
+
+Then run:
+
+```bash
 python tools/dev_check.py
 ```
 
-The command validates and tests the authoring tools, checks the controlled fixtures,
-and generates `build/repo-reviewer/`. It never executes code from a repository being
-reviewed.
+This validates the criteria, runs the tests, and rebuilds the complete skill in `build/repo-reviewer/`.
 
-## 2. Open the project in VS Code
+## 3. Install the generated skill in a test repository
 
-1. Open the repository root, not an individual subfolder.
-2. Install the [Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python).
-3. Run **Python: Select Interpreter** and select `.venv`.
-4. Open a new integrated terminal and run `python tools/dev_check.py`.
-5. Install whichever agent extension you want to test: [Claude
-   Code](https://code.claude.com/docs/en/ide-integrations), [Codex](https://learn.chatgpt.com/docs/codex/ide),
-   or [GitHub Copilot](https://code.visualstudio.com/docs/copilot/overview).
+Copy the whole `build/repo-reviewer/` folder into the repository you want to review:
 
-VS Code's [Python environment guide](https://code.visualstudio.com/docs/python/environments)
-covers interpreter discovery and activation problems.
+- Codex: `.agents/skills/repo-reviewer/`
+- Claude Code: `.claude/skills/repo-reviewer/`
+- GitHub Copilot: `.github/skills/repo-reviewer/`
 
-## 3. Connect the development build to an AI agent
+The final path must therefore contain `repo-reviewer/SKILL.md`, for example `repository-to-review/.agents/skills/repo-reviewer/SKILL.md` for Codex. Create the parent folders if necessary; do not copy the contents of `repo-reviewer/` directly into `skills/`.
 
-Run the build first, then preview the user-level links:
+For repeated testing, you can instead create a development link with `tools/setup_dev_skill.py`; the README explains the command and its safety properties.
 
-```bash
-python tools/setup_dev_skill.py --dry-run claude
-python tools/setup_dev_skill.py --dry-run codex
-python tools/setup_dev_skill.py --dry-run copilot
-```
+## 4. Review the test repository
 
-Create one or more links after checking the destinations:
-
-```bash
-python tools/setup_dev_skill.py claude codex copilot
-```
-
-On Windows the helper creates directory junctions; on macOS and Linux it creates
-symbolic links. It refuses to replace an existing destination. Codex and Copilot share
-the user-level `.agents/skills/repo-reviewer` destination, so naming both is safe.
-
-### Claude Code
-
-- Install and sign in to Claude Code or its VS Code extension.
-- The helper links the build to `~/.claude/skills/repo-reviewer/`.
-- Start Claude Code from this repository for development, or from one fixture/target
-  repository for an isolated review.
-- Invoke the generated skill with `/repo-reviewer`, or ask for it by name.
-
-Claude Code documents personal and project skill locations in its [skills
-guide](https://code.claude.com/docs/en/slash-commands).
-
-### Codex
-
-- Install and sign in to the Codex CLI or IDE extension.
-- The helper links the build to `~/.agents/skills/repo-reviewer/`.
-- Start Codex in one fixture/target repository and invoke `$repo-reviewer`.
-- Run `/skills` or type `$` to confirm the skill is discoverable. Restart Codex if a
-  newly created top-level skill folder does not appear.
-
-See the official OpenAI documentation for [building and loading
-skills](https://learn.chatgpt.com/docs/build-skills).
-
-### GitHub Copilot
-
-- Use Copilot CLI or agent mode in VS Code.
-- The helper links the build to `~/.agents/skills/repo-reviewer/`; Copilot also supports
-  a personal `~/.copilot/skills/` location.
-- Invoke the generated skill as `/repo-reviewer`. In Copilot CLI, use `/skills reload`
-  after adding it during an existing session.
-
-See GitHub's [agent-skills overview](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills)
-and [Copilot CLI setup guide](https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-skills).
-
-## 4. Edit a criterion
-
-1. Read `criteria/_schema.md` and `criteria/_groups.md`.
-2. Copy `criteria/_authoring-template.md` or a nearby criterion in the same group.
-3. Put the new file at `criteria/<group>/<criterion-id>.md`.
-4. Use kebab-case IDs, keep published IDs stable, and cite at least one source from
-   `criteria/_sources.md`.
-5. Run `python tools/dev_check.py`.
-6. Inspect the relevant section of `build/repo-reviewer/SKILL.md`.
-
-If a check is `mode: deterministic`, add the corresponding fact to
-`tools/collect_repository_evidence.py` and update the deterministic unit and fixture
-expectations. The test suite enforces that every deterministic check has a collector
-fact.
-
-## 5. Test the generated reviewer
-
-For deterministic evidence snapshots from all fixtures:
-
-```bash
-python tools/dev_check.py --fixture all
-```
-
-Then open exactly one directory under `tests/manual/fixtures/` as the agent workspace
-and ask:
+Open the target repository in your AI tool and ask it to use the reviewer, for example:
 
 ```text
-Use the repo-reviewer skill to review this repository before publication.
+Use the repo-reviewer skill to review this repository and create REVIEW.md.
 ```
 
-Compare the result with `tests/manual/expectations.md`. Check states and evidence
-before comparing prose. Do not show the expectation file to the reviewing agent in
-advance. Save any local reports under `build/manual-results/`; `build/` and
-`REVIEW.md` are ignored.
+Depending on the tool, you can also invoke it explicitly as `$repo-reviewer` or `/repo-reviewer`.
 
-## 6. Report a test result
+Check whether `REVIEW.md` is clear, correctly prioritised, and supported by evidence from the repository. If not, adjust the relevant criterion or `tools/skill_template.md`, rebuild, and repeat.
 
-Record the following in an issue or shared document:
-
-- repository or fixture name and expected quality;
-- AI tool, model, access mode, date, and criteria version;
-- unexpected passes or failures, including the criterion/check and why;
-- unclear or unstable results;
-- a missing criterion the reviewer was not permitted to report.
-
-Write expected problems down before running the reviewer. This makes comparisons
-between tools and revisions more meaningful.
-
-## Project rules for AI assistants
-
-`AGENTS.md` contains the shared project instructions used by Codex and supported
-Copilot surfaces. `CLAUDE.md` imports those same instructions for Claude Code. Keep the
-substantive rules in `AGENTS.md` so they do not drift.
+Before sharing a change, run `python tools/dev_check.py` once more and briefly report what you tested.
