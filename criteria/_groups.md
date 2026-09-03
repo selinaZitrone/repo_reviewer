@@ -36,7 +36,7 @@ Worked example — "structure" is two different concerns, and the rule splits th
 | 3 | `data` | availability statement; codebook/data dictionary; formats; **raw vs. derived separation**; **sensitive-data flag** | Example Data, (parts of Reproducibility) |
 | 4 | `code-quality` | **code structure** (modularity, functions vs. copy-paste, organisation within & between scripts); meaningful **variable/function** names; comments explain *why* | Code Quality, Naming/Structure (code level); formerly `code-analysis`, minus the run-it-again items now in `reproducibility` |
 | 5 | `environment` | dependencies recorded with **versions**; container; language version; OS notes | Environment/System/Installation |
-| 6 | `repository-hygiene` | `.gitignore`; no committed junk/outputs; **no committed secrets**; sensible size | (new — thin in old notes) |
+| 6 | `repository-hygiene` | no generated junk/outputs; **no secrets present**; sensible size | (new — thin in old notes) |
 | 7 | `archive-release` | deposit on Zenodo/domain repo; DOI; tagged/versioned release; "ask a colleague to run it" | (new) — mostly `mode: none` checks; formerly `archiving-release` |
 | 8 | `reproducibility` | no absolute paths / `setwd()` (runs from a fresh clone); **seeds set** (reproducible randomness); **run order** documented/discoverable; deterministic outputs | (new) — the run-it-again items pulled out of old `code-analysis` |
 

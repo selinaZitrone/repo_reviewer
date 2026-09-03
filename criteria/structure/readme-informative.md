@@ -17,6 +17,14 @@ checks:
         - README.rst
         - README.txt
         - README
+  - id: readme-has-content
+    mode: deterministic
+    severity: must-fix
+    summary: The README contains substantive content rather than a placeholder
+    evidence:
+      any:
+        - "README contains more than a title line"
+        - "README is not an unedited hosting-platform stub"
   - id: readme-states-what-and-why
     mode: ai
     severity: must-fix
@@ -27,12 +35,20 @@ checks:
         - "what the analysis addresses or produces"
   - id: readme-states-how-to-run
     mode: ai
-    severity: should-fix
+    severity: must-fix
     summary: The README explains how to run or reproduce the analysis
     evidence:
       any:
         - "the entry point / run order (e.g. run R/make.R, or numbered scripts in order)"
         - "where inputs come from and where outputs go"
+  - id: readme-structure-overview
+    mode: ai
+    severity: must-fix
+    summary: The README explains how the repository is organised
+    evidence:
+      any:
+        - "a directory tree or prose description of the top-level folders"
+        - "an established layout whose parts are explained"
   - id: readme-matches-repo
     mode: ai
     severity: should-fix
@@ -41,6 +57,15 @@ checks:
       any:
         - "folders and scripts named in the README actually exist in the repo"
         - "no references to renamed, moved, or deleted files"
+  - id: readme-nice-to-haves
+    mode: ai
+    severity: polish
+    summary: The README includes useful orientation aids for the kind of project being reviewed
+    evidence:
+      any:
+        - "a table of contents for a long README"
+        - "an example command and expected outputs"
+        - "versioned releases or relevant status badges"
 ---
 
 ## Why it matters
@@ -55,12 +80,14 @@ the rest of the documentation may be stale too.
 ## How to satisfy it
 
 - Open with a **title and 1–3 sentences**: what the project is and the question it
-  answers.
+  answers. Replace any hosting-platform placeholder text.
 - Tell a newcomer **how to reproduce it**: the entry point (e.g. "run `R/make.R`"), the
   order things run in, where the input data come from, and where outputs are written.
 - **Keep it in sync.** When you rename or move files, update the README. Describe the
   structure at a level that does not rot — folders and their roles — rather than a
   line-by-line file list that goes stale the moment you refactor.
+- For a long README or complex project, add an example command, expected output, or
+  table of contents when it helps a newcomer find the important path quickly.
 
 ## Examples
 

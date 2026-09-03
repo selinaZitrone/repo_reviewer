@@ -85,11 +85,11 @@ checks:                           # required. one or more.
 - `pass_when` — **optional, default `present`.** `present` = the check passes when a
   satisfying piece of `evidence` is **found** (add-a-thing checks, the majority).
   `absent` = the check passes when the evidence is **not** found (remove-a-thing
-  checks: committed secrets, absolute paths, committed junk). For `absent` checks the
+  checks: secrets, absolute paths, generated junk). For `absent` checks the
   `evidence` list is the *violation patterns to search for*, and the fix is
   "remove/replace the flagged item" (the good state is the `summary`). Rule of thumb:
   if a check would make you say "good, I didn't find any…", it is `pass_when: absent`.
-  Worked example: `criteria/repository-hygiene/no-committed-secrets.md`. → `decisions/0007`.
+  Worked example: `criteria/repository-hygiene/no-secrets-present.md`. → `decisions/0007`.
 - `evidence` — machine-facing, terse. Keys: `r`, `python`, `any`, and other
   languages as needed (`matlab` only where it genuinely differs). Each entry is a
   concrete artifact or pattern the script/agent looks for. **Required for

@@ -14,22 +14,37 @@ checks:
     evidence:
       any:
         - LICENSE
+        - LICENCE
         - LICENSE.md
+        - LICENCE.md
         - LICENSE.txt
+        - LICENCE.txt
+        - "LICENSE-<name> or LICENCE-<name> for a named or dual licence"
         - "full licence text present in README"
-  - id: license-osi
+  - id: license-machine-readable
+    mode: deterministic
+    severity: must-fix
+    summary: The licence is available as plain text rather than only in a binary document
+    evidence:
+      any:
+        - "LICENSE or LICENCE with no extension or a .md, .txt, or .rst extension"
+        - "full licence text present in README"
+  - id: code-license-osi
     mode: ai
     severity: should-fix
-    summary: The code licence is a recognised (OSI-approved) licence
+    summary: The code licence is OSI-approved and is not a data licence misapplied to code
+    evidence:
+      any:
+        - "MIT, GPL, LGPL, Apache-2.0, or another licence on the OSI list"
   - id: data-license
     mode: ai
     severity: should-fix
     summary: Included data carries its own licence (only when data is present)
     evidence:
       any:
-        - LICENSE-data
+        - "a licence file inside the data folder"
         - "a data licence (e.g. CC-BY-4.0, CC0) named with its text"
-        - "data licence stated in README"
+        - "a README statement that clearly scopes a licence to the data"
 ---
 
 ## Why it matters
@@ -56,7 +71,8 @@ CSV next to it may be redistributed.
 - For **data**, add a separate data licence — Creative Commons (e.g. CC-BY-4.0)
   is usual for data. State it distinctly from the code licence.
 - Make sure the full licence *text* is present, not just a name in the README.
-  GitHub's "Add a license" helper generates the correct file.
+  Use a plain-text or Markdown file, not only a PDF or office document. GitHub's
+  "Add a license" helper generates the correct file.
 - If the repository combines code, data, and text, say in the README which
   licence covers which part.
 
@@ -65,7 +81,7 @@ CSV next to it may be redistributed.
 Sufficient:
 
     LICENSE          # full text of MIT / Apache-2.0 / GPL-3.0 ...
-    LICENSE-data     # CC-BY-4.0 for the contents of data/
+    data/LICENSE     # CC-BY-4.0 for the contents of data/
 
 Not sufficient:
 

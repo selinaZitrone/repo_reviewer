@@ -20,6 +20,7 @@ Use the **id** (left column) in frontmatter.
 | `codecheck` | Nüst & Eglen (2021), CODECHECK, *F1000Research* | (scope boundary) | Cite as what we deliberately are **not** doing (execution). Sharpens positioning — `decisions/0003`. |
 | `cookiecutter-ds` | Cookiecutter Data Science (DrivenData) | code-quality | Concrete folder-structure reference. |
 | `nature-s44271` | Nature Comms Psychology, code-structure article (`s44271-025-00236-3`) | code-quality, structure | Team-sourced structure reference. |
+| `project-contribution` | repo-reviewer collaborator contribution | data, repository-hygiene | Project-originated criterion; its rationale and limits must be justified in the criterion body. |
 
 ## Coverage sanity check (each group has upstream backing)
 
