@@ -1,6 +1,6 @@
 ---
 name: repo-reviewer
-description: Reviews a scientific data-analysis repository before publication and writes a prioritised REVIEW.md checklist of what to improve so a competent stranger could understand, trust, and reuse the work. Author-facing; reads the repo, never executes it.
+description: Review scientific repositories before publication and write an evidence-backed REVIEW.md checklist. Inspect files; never run repository code.
 ---
 
 # repo-reviewer — publication-readiness review
