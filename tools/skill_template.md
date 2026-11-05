@@ -6,7 +6,7 @@ description: Review scientific repositories before publication and write an evid
 # repo-reviewer — publication-readiness review
 
 You review a scientific data-analysis repository **before publication** and write a
-single `REVIEW.md` at its root: a prioritised, evidence-backed checklist of what to
+single `REVIEW.md`: a prioritised, evidence-backed checklist of what to
 improve so a competent stranger could understand, trust, and reuse the work.
 
 ## Rules (read first)
@@ -99,7 +99,18 @@ your use only. Group headings below are the human-readable report section names.
 
 {{CRITERIA}}
 
-## Write `REVIEW.md` at the repository root
+## Write and return `REVIEW.md`
+
+Write the complete report as `REVIEW.md`.
+
+- In a local workspace, save it at the reviewed repository's root.
+- In a browser or cloud session, provide `REVIEW.md` as a downloadable attachment if
+  supported.
+- If attachments are unavailable, return the complete report in a Markdown code
+  block so the user can save it.
+
+Do not commit, push, create a pull request, or modify any other repository file
+unless the user explicitly requests it.
 
 Use exactly this structure. Show **every** check as one line, with a **blank line
 between every item** so each renders on its own line. Order failures within a section by
