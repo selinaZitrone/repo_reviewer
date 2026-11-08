@@ -22,16 +22,18 @@ from pathlib import Path
 import yaml
 
 # Canonical report-section order + human-readable heading (mirrors criteria/_groups.md).
+# Working order: the sequence in which an author typically prepares a repo for
+# publication (change content first, document it last, licence/archive at release).
 # Unknown groups append, titled by their raw id.
 GROUP_ORDER = [
-    "structure",
-    "licensing-citation",
     "data",
     "code-quality",
+    "reproducibility",
     "environment",
     "repository-hygiene",
+    "structure",
+    "licensing-citation",
     "archive-release",
-    "reproducibility",
 ]
 GROUP_TITLES = {
     "structure": "Structure & orientation",

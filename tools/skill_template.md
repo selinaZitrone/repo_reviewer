@@ -95,7 +95,8 @@ absent. Report the underlying gap **once**, as the presence failure.
 ## The criteria (checks)
 
 Internal reference. Do **not** print check ids or `mode` in the report — they are for
-your use only. Group headings below are the human-readable report section names.
+your use only. Group headings below are the human-readable report section names, listed
+in working order (the order an author would tackle them); keep this order in the report.
 
 {{CRITERIA}}
 

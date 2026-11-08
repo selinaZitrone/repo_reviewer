@@ -32,14 +32,13 @@ class CompileSkillTests(unittest.TestCase):
         root = Path(__file__).resolve().parents[1]
         rendered = compile_skill.render_criteria(compile_skill.load_criteria(root / "criteria"))
 
-        structure = rendered.index("### Structure & orientation")
-        licensing = rendered.index("### Licensing & citation")
-        environment = rendered.index("### Environment & dependencies")
-        hygiene = rendered.index("### Repository hygiene")
+        titles = [compile_skill.GROUP_TITLES[g] for g in compile_skill.GROUP_ORDER]
+        positions = [rendered.index(f"### {title}") for title in titles]
 
-        self.assertLess(structure, licensing)
-        self.assertLess(licensing, environment)
-        self.assertLess(environment, hygiene)
+        self.assertEqual(positions, sorted(positions))
+        self.assertLess(
+            rendered.index("### Code quality"), rendered.index("### Licensing & citation")
+        )
         self.assertNotIn("### structure", rendered)
 
     def test_compiled_distribution_includes_evidence_collector(self):
