@@ -5,7 +5,7 @@ outside each fixture reduces the chance that the reviewer simply repeats them.
 
 The exact deterministic states are asserted in `expected-deterministic.json`. The
 notes below are high-confidence anchors for AI checks, not a frozen benchmark for all
-56 checks. The expanded criteria set is entering collaborator validation, so uncertain
+57 checks. The expanded criteria set is entering collaborator validation, so uncertain
 or disputed outcomes should be recorded rather than silently rewritten here.
 
 For every fixture, conditional checks should be marked not applicable when their
