@@ -71,7 +71,9 @@ checks:                           # required. one or more.
   (website + post-review checklist only, never a nagging finding). A criterion
   whose checks are all `mode: none` (most of `archiving-release`) omits `evidence`.
 - `severity` — **per check**. Anchor definitions (use these when authoring):
-  - **must-fix** — without this, a competent stranger cannot reuse the repo.
+  - **must-fix** — a blocker: without this, a competent stranger cannot start using
+    the repo at all, or publishing it creates a legal/safety risk (secrets, sensitive
+    data, no licence). Keep this tier small; "would be much better" is should-fix.
   - **should-fix** — reuse is possible but materially harder than necessary.
   - **polish** — everything else.
   All three render in the checklist; the report's priority **digest** leads with

@@ -8,7 +8,7 @@ sources:
 checks:
   - id: data-separation-by-folder
     mode: ai
-    severity: must-fix
+    severity: should-fix
     summary: Raw and processed data are stored separately when the workflow creates derived data
     evidence:
       any:

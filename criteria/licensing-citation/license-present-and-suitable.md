@@ -23,7 +23,7 @@ checks:
         - "full licence text present in README"
   - id: license-machine-readable
     mode: deterministic
-    severity: must-fix
+    severity: should-fix
     summary: The licence is available as plain text rather than only in a binary document
     evidence:
       any:

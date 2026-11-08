@@ -33,17 +33,9 @@ checks:
       any:
         - "a title and a 1–3 sentence description of the project / research question"
         - "what the analysis addresses or produces"
-  - id: readme-states-how-to-run
-    mode: ai
-    severity: must-fix
-    summary: The README explains how to run or reproduce the analysis
-    evidence:
-      any:
-        - "the entry point / run order (e.g. run R/make.R, or numbered scripts in order)"
-        - "where inputs come from and where outputs go"
   - id: readme-structure-overview
     mode: ai
-    severity: must-fix
+    severity: should-fix
     summary: The README explains how the repository is organised
     evidence:
       any:

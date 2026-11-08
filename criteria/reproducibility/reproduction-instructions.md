@@ -16,7 +16,7 @@ checks:
         - "a root README link to a dedicated reproduction guide"
   - id: run-order-clear
     mode: ai
-    severity: must-fix
+    severity: should-fix
     summary: The order in which code must run is apparent or documented
     evidence:
       any:

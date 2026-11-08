@@ -8,7 +8,7 @@ sources:
 checks:
   - id: input-data-format
     mode: ai
-    severity: must-fix
+    severity: should-fix
     summary: The format required to run the analysis with new input data is documented
     evidence:
       any:
@@ -16,7 +16,7 @@ checks:
         - "an example input or visualisation plus any required transformation steps"
   - id: input-data-processing-level
     mode: ai
-    severity: must-fix
+    severity: should-fix
     summary: The required preprocessing state of new input data is documented
     evidence:
       any:

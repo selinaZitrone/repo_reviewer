@@ -133,8 +133,13 @@ so you can sanity-check that I read the scope correctly.>
 _Legend: ✅ pass · ❌ needs fixing · ⚠️ couldn't verify · ➖ not applicable_
 
 ## Do this first
-<Numbered list of ONLY the open must-fix ❌ items, most important first — each is its
-one-line fix. If there are none, write: "No must-fix items open — nice.">
+<Numbered list of AT MOST 5 open must-fix ❌ items — the blockers that stop a stranger
+from safely using the repo at all — each as its one-line fix. One entry per underlying
+problem (if several checks fail for the same cause, list it once). Order: legal/safety
+risks (secrets, sensitive data, licence) → can't get started (README, how to run,
+environment) → everything else. Never include ⚠️, should-fix or polish items; further
+must-fix items stay in the checklist only. If there are none, write: "No must-fix items
+open — nice.">
 
 ## Checklist
 

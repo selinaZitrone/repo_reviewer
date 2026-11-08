@@ -9,14 +9,14 @@ sources:
 checks:
   - id: repo-name-meaningful
     mode: ai
-    severity: must-fix
+    severity: should-fix
     summary: The repository name reflects what the project is about
     evidence:
       any:
         - "a project- or paper-specific name rather than a placeholder such as new-repo, test, or project1"
   - id: meaningful-file-and-folder-names
     mode: ai
-    severity: must-fix
+    severity: should-fix
     summary: File and folder names describe their contents
     evidence:
       any:

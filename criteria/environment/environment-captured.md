@@ -42,7 +42,7 @@ checks:
         - "pyproject.toml with pinned versions"
   - id: additional-toolboxes-specified
     mode: ai
-    severity: must-fix
+    severity: should-fix
     summary: Required toolboxes and system-level dependencies outside the package manager are named
     evidence:
       r:
@@ -55,7 +55,7 @@ checks:
         - "required compilers, drivers, or external binaries are documented"
   - id: installation-instructions-exist
     mode: ai
-    severity: must-fix
+    severity: should-fix
     summary: The README explains how to install dependencies and set up the environment
     evidence:
       any:

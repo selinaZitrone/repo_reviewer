@@ -8,7 +8,7 @@ sources:
 checks:
   - id: folder-structure-documented
     mode: ai
-    severity: must-fix
+    severity: should-fix
     summary: The rerun instructions specify the required folder structure
     evidence:
       any:
@@ -16,7 +16,7 @@ checks:
         - "instructions identifying where externally obtained inputs must be placed"
   - id: inputs-outputs-documented
     mode: ai
-    severity: must-fix
+    severity: should-fix
     summary: The rerun instructions specify where inputs come from and where outputs go
     evidence:
       any:
