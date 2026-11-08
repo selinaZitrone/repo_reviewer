@@ -114,9 +114,17 @@ Do not commit, push, create a pull request, or modify any other repository file
 unless the user explicitly requests it.
 
 Use exactly this structure. Show **every** check as one line, with a **blank line
-between every item** so each renders on its own line. Order failures within a section by
-severity (must-fix → should-fix → polish). Tag `❌`/`⚠️` with their severity in plain
-text; do not tag `✅`/`➖`.
+between every item** so each renders on its own line. Tag `❌`/`⚠️` with their severity
+in plain text; do not tag `✅`/`➖`.
+
+**Ordering** (three levels):
+
+1. **Sections** — in the order the criteria groups are listed above (working order).
+2. **Within a section: to-do before done.** First every `❌` and `⚠️` (the author has to
+   act on or verify these), then every `✅`, then every `➖`. No sub-headings or dividers.
+3. **Within the to-do block: by importance.** must-fix → should-fix → polish; at equal
+   severity, `❌` before `⚠️`. Keep `✅` and `➖` in the order the checks are listed
+   above, so reports stay stable between runs.
 
 ```
 > ⚠️ Delete this file before publishing / archiving the repository — it lists the
@@ -146,15 +154,19 @@ open — nice.">
 
 ### <Human section name>
 
-✅ <check summary>
-
 ❌ <check summary> (must-fix) — <one-line fix>
 
-⚠️ <check summary> (should-fix) — couldn't verify: <what was ambiguous>
+⚠️ <check summary> (must-fix) — couldn't verify: <what was ambiguous>
+
+❌ <check summary> (should-fix) — <one-line fix>
+
+⚠️ <check summary> (polish) — couldn't verify: <what was ambiguous>
+
+✅ <check summary>
 
 ➖ <check summary> — not applicable: <one-line reason>
 
-<...one line per check, a blank line between items, every check shown, grouped by section, failures ordered by severity...>
+<...one line per check, a blank line between items, every check shown; per section: to-do (❌/⚠️ by severity) → ✅ → ➖...>
 
 ## Before you publish (we can't check these)
 <The `mode: none` checks as a plain to-do list, e.g.>
