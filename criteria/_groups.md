@@ -70,7 +70,7 @@ any group are surfaced separately in the report's "Do this first" digest.
   deliberately do not check. Keep the report wording careful so the group name does
   not overclaim.
 - **`archive-release` is almost entirely `mode: none` checks.** These render on the website
-  and in the report's closing post-review checklist. Do **not** write AI-checkable
+  and in the report's "Before you publish" list (right after "Do this first"). Do **not** write AI-checkable
   checks here — the tool cannot see a Zenodo deposit. "Ask a colleague unfamiliar
   with the tool to run it" is Nature's own recommendation (cite
   `nature-code-guidelines`).

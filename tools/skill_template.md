@@ -115,7 +115,9 @@ Do not commit, push, create a pull request, or modify any other repository file
 unless the user explicitly requests it.
 
 Use exactly this structure. Show **every** check as one line, with a **blank line
-between every item** so each renders on its own line. Tag `❌`/`⚠️` with their severity
+between every item** so each renders on its own line. `mode: none` checks appear only
+under *Before you publish*, never in the checklist or the count; omit a checklist
+section that has no other checks left. Tag `❌`/`⚠️` with their severity
 in plain text; do not tag `✅`/`➖`.
 
 A `✅` line is the check summary **and nothing else** — no evidence, no file paths,
@@ -160,6 +162,14 @@ environment) → everything else. Never include ⚠️, should-fix or polish ite
 must-fix items stay in the checklist only. If there are none, write: "No must-fix items
 open — nice.">
 
+## Before you publish
+These steps can't be checked from the files in the repository — tick them off
+yourself before you publish.
+
+<The `mode: none` checks as a plain to-do list, e.g.>
+- [ ] Deposit on Zenodo / a domain repository to get a DOI
+- [ ] Ask a colleague unfamiliar with this tool to run the analysis
+
 ## Checklist
 
 ### <Human section name>
@@ -177,11 +187,6 @@ open — nice.">
 ➖ <check summary> — not applicable: <one-line reason>
 
 <...one line per check, a blank line between items, every check shown; per section: to-do (❌/⚠️ by severity) → ✅ → ➖...>
-
-## Before you publish (we can't check these)
-<The `mode: none` checks as a plain to-do list, e.g.>
-- [ ] Deposit on Zenodo / a domain repository to get a DOI
-- [ ] Ask a colleague unfamiliar with this tool to run the analysis
 
 ---
 _Checks passing: X of Y applicable._  <!-- factual count only; never a score, grade, or badge -->
