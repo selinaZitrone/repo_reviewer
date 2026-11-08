@@ -122,6 +122,11 @@ A `✅` line is the check summary **and nothing else** — no evidence, no file 
 no examples, no praise (not "e.g. see `analysis.R`"). Evidence and locations belong
 only on `❌` and `⚠️` lines.
 
+**Locations (`❌`/`⚠️` only).** If the problem sits in specific places, append them:
+1–3 places → list every one (`path` or `path:line`); more than 3 → two examples
+plus the count ("e.g. `a.R:12`, `b.R:40` (+5 more)"). Omit locations when the
+finding is a missing artifact. Never quote a secret value.
+
 **Ordering** (three levels):
 
 1. **Sections** — in the order the criteria groups are listed above (working order).
@@ -159,13 +164,13 @@ open — nice.">
 
 ### <Human section name>
 
-❌ <check summary> (must-fix) — <one-line fix>
+❌ <check summary> (must-fix) — <one-line fix>[: <locations>]
 
-⚠️ <check summary> (must-fix) — couldn't verify: <what was ambiguous>
+⚠️ <check summary> (must-fix) — couldn't verify: <what was ambiguous>[: <locations>]
 
-❌ <check summary> (should-fix) — <one-line fix>
+❌ <check summary> (should-fix) — <one-line fix>[: <locations>]
 
-⚠️ <check summary> (polish) — couldn't verify: <what was ambiguous>
+⚠️ <check summary> (polish) — couldn't verify: <what was ambiguous>[: <locations>]
 
 ✅ <check summary>
 

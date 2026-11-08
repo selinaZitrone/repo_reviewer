@@ -46,5 +46,17 @@
     "no-junk-files": "pass",
     "no-absolute-paths": "pass",
     "no-setwd-or-chdir": "pass"
+  },
+  "05-few-local-issues": {
+    "readme-present": "pass",
+    "readme-has-content": "pass",
+    "license-present": "pass",
+    "license-machine-readable": "pass",
+    "code-citation-present": "pass",
+    "env-file-present": "pass",
+    "no-secrets-present": "pass",
+    "no-junk-files": "pass",
+    "no-absolute-paths": "pass",
+    "no-setwd-or-chdir": "pass"
   }
 }

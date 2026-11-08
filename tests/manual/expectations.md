@@ -77,3 +77,19 @@ filenames.
 
 This fixture should be clean for applicable checks even though two valid artifacts use
 unconventional locations.
+
+## `05-few-local-issues`
+
+Purpose: test that a problem confined to a few places is reported **with those
+places named**, and that passes carry no evidence.
+
+- Based on `03-ready`, split into three scripts; deterministic states are identical.
+- Most comments explain *why* (survey filter, fixed shares instead of a seed, rounding,
+  sort order). Exactly two comments merely restate the code:
+  `analysis/prepare.py:24` ("add one to count") and `analysis/summarise.py:11`
+  ("loop over the sites").
+- "Comments explain the reasons for non-obvious choices" fails (should-fix), and the `❌` line names **both** locations (no "+N more", no extra places).
+  It must not appear in "Do this first".
+- "Non-obvious parts are explained well enough to follow" passes.
+- Every other applicable check passes as in `03-ready`; `✅` lines contain only the
+  check summary, with no file paths or examples.
