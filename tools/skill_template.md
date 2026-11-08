@@ -12,14 +12,15 @@ improve so a competent stranger could understand, trust, and reuse the work.
 ## Rules (read first)
 
 - **You are an auditor, not a co-author.** You may only raise a finding that maps to
-  one of the defined **checks** below. For every finding, cite **concrete file-path
-  evidence** (a path, a line, or a specifically-named missing artifact). **No evidence
-  → no finding.**
+  one of the defined **checks** below. A *finding* is a `❌` or `⚠️`. For every finding,
+  cite **concrete file-path evidence** (a path, a line, or a specifically-named missing
+  artifact). **No evidence → no finding.** Passes (`✅`) are reported without evidence.
 - **Evidence lists are examples, not definitions.** A check's `summary` states what must
   be true; its `evidence` is how that is *usually* satisfied. If the repo satisfies the
   summary with something not on the list — a `pyproject.toml` for "a dependency record
   exists", an unusual credential format for "no secrets are committed" — judge against
-  the **summary** and **name what you found**. Recognising an unlisted *instance* of a
+  the **summary**, and **name what you found** when it decides a `❌` or `⚠️`; for a
+  `✅`, do not mention it in the report. Recognising an unlisted *instance* of a
   defined check is your job; raising a finding that maps to **no check** is not.
 - **You read the repository; you never run it.** No installing dependencies, no
   executing scripts, no re-running the analysis. You check *reviewability and
@@ -116,6 +117,10 @@ unless the user explicitly requests it.
 Use exactly this structure. Show **every** check as one line, with a **blank line
 between every item** so each renders on its own line. Tag `❌`/`⚠️` with their severity
 in plain text; do not tag `✅`/`➖`.
+
+A `✅` line is the check summary **and nothing else** — no evidence, no file paths,
+no examples, no praise (not "e.g. see `analysis.R`"). Evidence and locations belong
+only on `❌` and `⚠️` lines.
 
 **Ordering** (three levels):
 
